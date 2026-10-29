@@ -161,7 +161,7 @@ window.PE_DATA = {
     { title: 'Unity-Horrorspiel', desc: 'Horrorspiel mit 28 C#-Scripts und deutscher Einrichtungsanleitung.', tags: ['Unity', 'C#'] },
     { title: 'Chaos Mod', desc: 'Fabric-Mod für Minecraft 1.20.1, ausgeliefert als fertiges Paket.', tags: ['Fabric', 'Minecraft'] },
     { title: 'DRK-Website im Röntgen-Look', desc: 'Scroll-Animation von der Wirbelsäule bis zum Kreuz, gebaut mit Three.js.', tags: ['Three.js', 'WebGL'] },
-    { title: 'Audi-Autohaus-Website', desc: 'Detaillierte SVG-Fahrzeuge mit animierter Montage-Sequenz.', tags: ['SVG', 'Animation'] },
+    { title: 'Audi-Autohaus-Website', desc: 'Interaktive 3D-Fotomontage mit Three.js: Das Fahrzeugbild setzt sich Segment für Segment im Raum zusammen.', tags: ['Three.js', 'WebGL', '3D-Animation'] },
     { title: 'SCP-Datenbank', desc: 'Fan-Website mit Tresor-Intro, Suche, Filtern und Fallakten.', tags: ['React', 'TypeScript', 'Tailwind'] },
     { title: 'MedicNet', desc: 'App für den Sanitätsdienst: Patientenprotokolle, Unterschrift per Stift, Normwerte, Metronom.', tags: ['App', 'in Entwicklung'] }
   ],

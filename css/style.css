@@ -228,6 +228,46 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .project-list .tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
 .project-list .tags span { font-size: .82rem; font-weight: 500; padding: 3px 12px; border-radius: 999px; border: 1.5px solid var(--pond-900); white-space: nowrap; }
 
+/* ---------- Three.js Audi-Montage ---------- */
+.project-list li.project-audi { display: block; padding: 0; overflow: hidden; border: 1px solid rgba(16,51,58,.12); border-radius: 32px; background: #080d16; box-shadow: 0 30px 70px -42px rgba(11,34,39,.7); }
+.project-list li.project-audi:hover { padding-left: 0; background: #080d16; }
+.project-list li.project-audi::before { display: none; }
+.project-audi .audi-montage { position: relative; min-height: 470px; height: clamp(370px, 43vw, 540px); overflow: hidden; isolation: isolate; color: #f4f8f8; background: radial-gradient(ellipse at 50% 40%, #16343d 0%, #0c1821 46%, #070b12 100%); }
+.project-audi .audi-montage::before { content: ""; position: absolute; inset: 0; z-index: 0; opacity: .28; background-image: linear-gradient(rgba(89,184,206,.16) 1px, transparent 1px), linear-gradient(90deg, rgba(89,184,206,.16) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 74%, transparent); transform: perspective(500px) rotateX(58deg) scale(1.8) translateY(25%); transform-origin: bottom; }
+.audi-static-image { position: absolute; z-index: 1; width: min(48%, 580px); height: auto; left: 50%; top: 50%; opacity: .42; transform: translate(-50%, -50%); filter: saturate(.9); transition: opacity .8s; pointer-events: none; }
+.audi-ready .audi-static-image { opacity: .08; }
+.audi-montage canvas { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab; touch-action: pan-y; }
+.audi-montage canvas.dragging { cursor: grabbing; }
+.audi-montage-glow { position: absolute; left: 50%; top: 50%; z-index: 1; width: min(70%, 650px); aspect-ratio: 1; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, rgba(42,165,195,.22), rgba(22,62,76,.1) 42%, transparent 70%); transform: translate(-50%, -50%); filter: blur(16px); transition: opacity .8s, scale 1s; }
+.audi-montage-top, .audi-montage-bottom { position: absolute; z-index: 3; left: clamp(22px, 5vw, 64px); right: clamp(22px, 5vw, 64px); display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+.audi-montage-top { top: 28px; }
+.audi-montage-bottom { bottom: 30px; align-items: end; }
+.audi-kicker, .audi-build-state, .audi-index { display: inline-flex; align-items: center; gap: 9px; font: 700 .7rem/1.2 "Figtree", sans-serif; letter-spacing: .16em; }
+.audi-kicker { color: rgba(231,246,248,.8); }
+.audi-kicker i { width: 8px; height: 8px; border-radius: 50%; background: #51e4c2; box-shadow: 0 0 16px #51e4c2; animation: audi-led 1.5s ease-in-out infinite; }
+.audi-build-state { color: #70d9e9; padding: 9px 13px; border: 1px solid rgba(112,217,233,.27); background: rgba(6,20,27,.45); border-radius: 999px; backdrop-filter: blur(12px); }
+.audi-montage-bottom > div { text-shadow: 0 2px 24px rgba(0,0,0,.6); }
+.audi-index { color: #e8a84c; margin-bottom: 8px; }
+.audi-montage-bottom h3 { color: #f4f8f8; font: 800 clamp(1.9rem, 4vw, 3.2rem)/.96 "Bricolage Grotesque", sans-serif; letter-spacing: -.04em; margin: 0 0 9px; }
+.audi-montage-bottom p { color: rgba(231,246,248,.72); margin: 0; font-size: 1rem; }
+.audi-replay { pointer-events: auto; display: inline-flex; align-items: center; gap: 9px; border: 1px solid rgba(231,246,248,.25); border-radius: 999px; padding: 12px 17px; color: #f4f8f8; background: rgba(10,28,35,.65); backdrop-filter: blur(12px); font: 600 .9rem "Figtree", sans-serif; transition: color .25s, background .25s, border-color .25s, transform .25s; }
+.audi-replay:hover { color: #071117; background: #7ce3e8; border-color: #7ce3e8; transform: translateY(-2px); }
+.audi-replay span { font-size: 1.2rem; line-height: .8; }
+.audi-hint { position: absolute; right: 50%; bottom: 28%; color: rgba(231,246,248,.62); font-size: .77rem; letter-spacing: .04em; pointer-events: none; transform: translateX(50%); transition: opacity .5s; }
+.audi-hint span { color: #70d9e9; font-size: 1.2rem; vertical-align: -1px; margin-left: 4px; }
+.audi-complete .audi-hint { opacity: 0; }
+.audi-ready.audi-complete .audi-montage-glow { scale: 1.12; opacity: .72; }
+.project-audi-copy { display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: 23px 32px 25px; background: #f4f8f5; }
+.project-audi-copy h3 { font: 700 1.2rem "Bricolage Grotesque", sans-serif; margin: 0 0 4px; }
+.project-audi-copy p { margin: 0; font-size: .95rem; color: var(--slate); }
+.project-audi-copy .tags { justify-content: flex-end; }
+.project-audi-copy .tags span { background: #fff; }
+.audi-fallback { background-image: linear-gradient(90deg, rgba(7,12,18,.72), rgba(7,12,18,.12)), var(--audi-image); background-size: cover; background-position: center; }
+.audi-fallback canvas, .audi-fallback .audi-montage-glow { display: none; }
+.audi-fallback .audi-static-image { opacity: .65; }
+.audi-fallback .audi-montage::before { display: none; }
+@keyframes audi-led { 50% { opacity: .45; transform: scale(.75); } }
+
 /* ---------- Lernen ---------- */
 .learning { background: var(--mist-deep); }
 .learn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
@@ -321,7 +361,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .script-grid { grid-template-columns: repeat(2, 1fr); }
   .learn-grid { grid-template-columns: 1fr; }
   .project-list li { grid-template-columns: 1fr; gap: 8px; }
+  .project-list li.project-audi { display: block; }
   .project-list .tags { justify-content: flex-start; margin-top: 6px; }
+  .project-audi .audi-montage { min-height: 400px; height: 64vw; max-height: 500px; }
+  .project-audi-copy { align-items: flex-start; flex-direction: column; padding: 22px 24px; }
+  .project-audi-copy .tags { margin-top: 0; }
   .scroll-cue { display: none; }
 }
 @media (max-width: 760px) {
@@ -343,4 +387,5 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .reveal, .reveal-clip { opacity: 1; transform: none; }
   .marquee-track { animation: none; }
   .rhythm-widget { opacity: 1; translate: none; }
+  .audi-kicker i { animation: none; }
 }

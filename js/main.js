@@ -296,9 +296,21 @@
     var ul = $('#projectList');
     if (!ul || !D.projects) return;
     ul.innerHTML = D.projects.map(function (p) {
-      return '<li class="reveal"><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><div class="tags">' +
-        p.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div></li>';
+      var tags = p.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
+      if (p.title === 'Audi-Autohaus-Website') {
+        return '<li class="reveal project-audi"><div class="audi-montage" id="audiMontage">' +
+          '<img class="audi-static-image" src="assets/audi-angularfront.avif" alt="Audi in Front-Schrägansicht" loading="lazy">' +
+          '<canvas id="audiMontageCanvas" aria-label="3D-Montage: Das Audi-Fahrzeug setzt sich aus animierten Bildsegmenten zusammen."></canvas>' +
+          '<div class="audi-montage-glow" aria-hidden="true"></div>' +
+          '<div class="audi-montage-top"><span class="audi-kicker"><i></i> THREE.JS · 3D MONTAGE</span><span class="audi-build-state" id="audiBuildState">MONTAGE LÄUFT</span></div>' +
+          '<div class="audi-montage-bottom"><div><span class="audi-index">01 / QUATTRO</span><h3>Audi, Stück für Stück.</h3><p>Ein Bild. Neu zusammengesetzt im Raum.</p></div>' +
+          '<button class="audi-replay" id="audiReplay" type="button"><span aria-hidden="true">↻</span> Montage neu starten</button></div>' +
+          '<span class="audi-hint" aria-hidden="true">Ziehen zum Drehen <span>↔</span></span></div>' +
+          '<div class="project-audi-copy"><div><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p></div><div class="tags">' + tags + '</div></div></li>';
+      }
+      return '<li class="reveal"><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><div class="tags">' + tags + '</div></li>';
     }).join('');
+    if (window.PE_AUDI_MONTAGE) window.PE_AUDI_MONTAGE.init();
   }
 
   var ICONS = {
