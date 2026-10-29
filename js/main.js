@@ -507,6 +507,122 @@
   }
 
   /* ───────────── EKG-Puls ───────────── */
+  function initRhythmWidget() {
+    var widget = $('#rhythmWidget'), canvas = $('#rhythmCanvas');
+    if (!widget || !canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d'), name = $('#rhythmName'), rate = $('#rhythmRate');
+    var pause = $('#rhythmPause'), collapse = $('#rhythmCollapse');
+    var modes = [
+      { name: 'Sinusrhythmus', rate: '76 bpm', kind: 'sinus', bpm: 76, color: '#55D6B0' },
+      { name: 'Sinustachykardie', rate: '146 bpm', kind: 'sinus', bpm: 146, color: '#F4B63A' },
+      { name: 'Sinusbradykardie', rate: '46 bpm', kind: 'sinus', bpm: 46, color: '#79C9E8' },
+      { name: 'Vorhofflimmern', rate: 'unregelmäßig', kind: 'af', color: '#FFAA70' },
+      { name: 'Vorhofflattern', rate: 'regelmäßig', kind: 'flutter', color: '#F4B63A' },
+      { name: 'Kammerflimmern', rate: 'chaotisch', kind: 'vf', color: '#FF6B6B' },
+      { name: 'Extrasystolen', rate: 'Musterbeispiel', kind: 'extra', color: '#D99CFF' }
+    ];
+    var width = 0, height = 0, ratio = 1, elapsed = 0, last = 0, modeIndex = 0;
+    var modeTime = 0, frameId = 0, playing = !reduce, collapsed = false;
+    var afIntervals = [.38, .76, .47, .59, .32, .83], afTotal = 0;
+    afIntervals.forEach(function (v) { afTotal += v; });
+
+    function mod(v, m) { return ((v % m) + m) % m; }
+    function gauss(x, center, spread) { var d = (x - center) / spread; return Math.exp(-d * d); }
+    function sinus(t, bpm) {
+      var period = 60 / bpm, p = mod(t, period) / period;
+      return 2.1 * gauss(p, .18, .055) - 4.5 * gauss(p, .385, .018) +
+        25 * gauss(p, .414, .013) - 7 * gauss(p, .447, .02) + 5.3 * gauss(p, .68, .075);
+    }
+    function signal(t, mode) {
+      if (mode.kind === 'sinus') return sinus(t, mode.bpm);
+      if (mode.kind === 'af') {
+        var local = mod(t, afTotal), start = 0, interval = afIntervals[0];
+        for (var i = 0; i < afIntervals.length; i++) {
+          interval = afIntervals[i];
+          if (local < start + interval) break;
+          start += interval;
+        }
+        var p = (local - start) / interval;
+        return 1.15 * Math.sin(t * 47) + .75 * Math.sin(t * 71 + .8) -
+          4 * gauss(p, .045, .025) + 22 * gauss(p, .08, .022) - 6 * gauss(p, .115, .03) + 4.4 * gauss(p, .36, .09);
+      }
+      if (mode.kind === 'flutter') {
+        var saw = 4.2 * (1 - 2 * mod(t * 5, 1)), q = mod(t, .8);
+        return saw - 3.5 * gauss(q, .105, .025) + 24 * gauss(q, .13, .018) - 6 * gauss(q, .16, .03) + 4 * gauss(q, .34, .08);
+      }
+      if (mode.kind === 'vf') {
+        var envelope = .62 + .38 * Math.sin(t * 2.7 + 1.2);
+        return envelope * (8 * Math.sin(t * 31 + 2.1 * Math.sin(t * 6.4)) + 4.8 * Math.sin(t * 53 + 1.4) + 3.2 * Math.sin(t * 17 + .3));
+      }
+      var cycle = mod(t, 1.55);
+      return sinus(cycle, 78) - 10 * gauss(cycle, .59, .045) + 27 * gauss(cycle, .635, .035) - 11 * gauss(cycle, .69, .05);
+    }
+    function resize() {
+      var box = canvas.getBoundingClientRect();
+      if (!box.width || !box.height) return;
+      width = box.width; height = box.height; ratio = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      draw();
+    }
+    function draw() {
+      if (!width || !height) return;
+      var mode = modes[modeIndex];
+      ctx.clearRect(0, 0, width, height);
+      ctx.strokeStyle = 'rgba(85,214,176,.12)'; ctx.lineWidth = 1;
+      for (var gx = 0; gx <= width; gx += 18) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, height); ctx.stroke(); }
+      for (var gy = 0; gy <= height; gy += 18) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(width, gy); ctx.stroke(); }
+      ctx.beginPath();
+      for (var x = 0; x <= width; x += 2) {
+        var t = elapsed - (width - x) / 105;
+        var y = height / 2 - signal(t, mode) * Math.min(1.12, height * .027);
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = mode.color; ctx.lineWidth = 2.2; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.shadowColor = mode.color; ctx.shadowBlur = 8; ctx.stroke(); ctx.shadowBlur = 0;
+    }
+    function setMode(i) {
+      modeIndex = i; modeTime = 0;
+      var mode = modes[modeIndex];
+      name.textContent = mode.name; rate.textContent = mode.rate;
+      canvas.setAttribute('aria-label', 'Stilisierte EKG-Simulation: ' + mode.name + ', ' + mode.rate);
+      widget.style.setProperty('--rhythm-accent', mode.color);
+      draw();
+    }
+    function frame(now) {
+      if (!playing || collapsed || document.hidden) { frameId = 0; return; }
+      var dt = Math.min((now - last) / 1000, .05); last = now;
+      elapsed += dt; modeTime += dt;
+      if (modeTime >= 6.2) setMode((modeIndex + 1) % modes.length);
+      draw(); frameId = requestAnimationFrame(frame);
+    }
+    function start() { if (playing && !collapsed && !document.hidden && !frameId) { last = performance.now(); frameId = requestAnimationFrame(frame); } }
+    function stop() { if (frameId) cancelAnimationFrame(frameId); frameId = 0; }
+
+    setMode(0); resize();
+    window.addEventListener('resize', resize);
+    if (window.ResizeObserver) new ResizeObserver(resize).observe(widget);
+    if (reduce) {
+      playing = false; pause.disabled = true; pause.setAttribute('aria-label', 'Animation durch Bewegungseinstellung reduziert');
+    } else start();
+    pause.addEventListener('click', function () {
+      playing = !playing;
+      pause.textContent = playing ? 'Ⅱ' : '▶';
+      pause.setAttribute('aria-pressed', playing ? 'false' : 'true');
+      pause.setAttribute('aria-label', playing ? 'EKG-Simulation pausieren' : 'EKG-Simulation fortsetzen');
+      if (playing) start(); else stop();
+    });
+    collapse.addEventListener('click', function () {
+      collapsed = !collapsed; widget.classList.toggle('collapsed', collapsed);
+      collapse.textContent = collapsed ? '+' : '−';
+      collapse.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      collapse.setAttribute('aria-label', collapsed ? 'EKG-Feld ausklappen' : 'EKG-Feld einklappen');
+      if (collapsed) stop(); else { resize(); start(); }
+    });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
+  }
+
+  /* ───────────── EKG-Puls ───────────── */
   function initBpm() {
     var el = $('#bpm');
     if (!el) return;
@@ -531,6 +647,7 @@
     initLearning();
     initContact();
     initYard();
+    initRhythmWidget();
     initBpm();
     initReveal();
     var y = $('#year');

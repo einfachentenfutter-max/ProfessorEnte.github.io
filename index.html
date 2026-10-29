@@ -207,6 +207,23 @@
 
 </main>
 
+<aside class="rhythm-widget" id="rhythmWidget" aria-label="EKG-Rhythmus-Simulation">
+  <div class="rhythm-widget-head">
+    <div class="rhythm-widget-title"><span class="rhythm-live-dot" aria-hidden="true"></span><span>EKG-Simulation</span></div>
+    <div class="rhythm-widget-controls">
+      <button class="rhythm-control" id="rhythmPause" type="button" aria-label="EKG-Simulation pausieren" aria-pressed="false">Ⅱ</button>
+      <button class="rhythm-control" id="rhythmCollapse" type="button" aria-label="EKG-Feld einklappen" aria-expanded="true">−</button>
+    </div>
+  </div>
+  <div class="rhythm-monitor">
+    <canvas id="rhythmCanvas" role="img" aria-label="Animierte, stilisierte EKG-Kurve"></canvas>
+  </div>
+  <div class="rhythm-widget-foot">
+    <strong id="rhythmName" aria-live="polite">Sinusrhythmus</strong>
+    <span id="rhythmRate">76 bpm</span>
+  </div>
+</aside>
+
 <footer class="footer">
   <div class="container footer-inner">
     <p>© <span id="year">2026</span> ProfessorEnte (Jayden). Alle Rechte vorbehalten.</p>

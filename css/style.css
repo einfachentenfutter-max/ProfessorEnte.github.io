@@ -259,6 +259,23 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .footer a { text-decoration: none; }
 .footer a:hover { color: var(--duck); }
 
+/* ---------- EKG-Rhythmus-Simulation ---------- */
+.rhythm-widget { --rhythm-accent: #55D6B0; position: fixed; z-index: 44; top: 52%; right: clamp(12px, 2vw, 28px); width: 196px; padding: 12px; border: 1px solid rgba(255,255,255,.16); border-radius: 22px; color: #F6FAF8; background: linear-gradient(145deg, rgba(11,34,39,.96), rgba(16,51,58,.94)); box-shadow: 0 18px 46px -22px rgba(0,0,0,.72), 0 0 0 1px rgba(85,214,176,.08); backdrop-filter: blur(12px); transform: translateY(-50%); opacity: 0; animation: rhythm-enter .8s .8s var(--ease) forwards; }
+.rhythm-widget-head, .rhythm-widget-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rhythm-widget-title { display: flex; align-items: center; gap: 8px; font-size: .76rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: rgba(246,250,248,.88); }
+.rhythm-live-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--rhythm-accent); box-shadow: 0 0 12px var(--rhythm-accent); animation: rhythm-dot 1.2s ease-in-out infinite; }
+.rhythm-widget-controls { display: flex; gap: 4px; }
+.rhythm-control { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 1px solid rgba(246,250,248,.16); border-radius: 50%; background: rgba(246,250,248,.08); color: var(--paper); font-size: .85rem; line-height: 1; transition: background .2s, transform .2s var(--ease); }
+.rhythm-control:hover { background: rgba(246,250,248,.2); transform: scale(1.08); }
+.rhythm-monitor { height: 72px; margin: 10px 0 8px; overflow: hidden; border: 1px solid rgba(85,214,176,.18); border-radius: 13px; background: #07191C; box-shadow: inset 0 0 18px rgba(0,0,0,.3); }
+#rhythmCanvas { width: 100%; height: 100%; }
+.rhythm-widget-foot { min-height: 22px; font-size: .75rem; }
+.rhythm-widget-foot strong { overflow: hidden; color: var(--rhythm-accent); font-size: .79rem; text-overflow: ellipsis; white-space: nowrap; transition: color .35s; }
+.rhythm-widget-foot span { color: rgba(246,250,248,.62); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rhythm-widget.collapsed { width: 196px; }
+.rhythm-widget.collapsed .rhythm-monitor, .rhythm-widget.collapsed .rhythm-widget-foot { display: none; }
+.rhythm-widget.collapsed .rhythm-widget-head { min-height: 28px; }
+
 /* ---------- Reveals ---------- */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
 .reveal.in { opacity: 1; transform: none; }
@@ -281,6 +298,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @keyframes panel-in { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
 @keyframes card-in { from { opacity: 0; transform: translateY(26px) scale(.97); } to { opacity: 1; transform: none; } }
 @keyframes badge-pop { 0%, 100% { transform: scale(1); } 45% { transform: scale(1.1) rotate(-2deg); } }
+@keyframes rhythm-enter { from { opacity: 0; translate: 24px 0; } to { opacity: 1; translate: 0 0; } }
+@keyframes rhythm-dot { 0%, 100% { opacity: .55; scale: .82; } 50% { opacity: 1; scale: 1.18; } }
 @keyframes marquee { to { transform: translateX(-50%); } }
 @keyframes ecg { from { stroke-dashoffset: 1000; } to { stroke-dashoffset: 0; } }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -306,6 +325,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .scroll-cue { display: none; }
 }
 @media (max-width: 760px) {
+  .rhythm-widget { top: auto; right: 12px; bottom: 12px; width: min(184px, calc(100vw - 24px)); transform: none; }
+  .rhythm-widget.collapsed { width: min(184px, calc(100vw - 24px)); }
   .nav-toggle { display: block; }
   .nav-links { position: absolute; top: calc(100% + 10px); left: 0; right: 0; flex-direction: column; align-items: stretch; background: var(--paper); border-radius: 26px; padding: 12px; box-shadow: var(--shadow); opacity: 0; visibility: hidden; transform: translateY(-10px); transition: opacity .3s, transform .3s, visibility .3s; }
   .nav-links.open { opacity: 1; visibility: visible; transform: none; }
@@ -321,4 +342,5 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .hero-title .ch, .hero-aka, .hero-lead, .hero-actions, .hero-roles, .duck-hint { opacity: 1; transform: none; }
   .reveal, .reveal-clip { opacity: 1; transform: none; }
   .marquee-track { animation: none; }
+  .rhythm-widget { opacity: 1; translate: none; }
 }
