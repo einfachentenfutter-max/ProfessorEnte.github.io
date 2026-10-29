@@ -296,7 +296,7 @@
     var ul = $('#projectList');
     if (!ul || !D.projects) return;
     ul.innerHTML = D.projects.map(function (p) {
-      return '<li><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><div class="tags">' +
+      return '<li class="reveal"><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><div class="tags">' +
         p.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div></li>';
     }).join('');
   }
