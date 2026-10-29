@@ -258,10 +258,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .audi-hint span { color: #70d9e9; font-size: 1.2rem; vertical-align: -1px; margin-left: 4px; }
 .audi-complete .audi-hint { opacity: 0; }
 .audi-ready.audi-complete .audi-montage-glow { scale: 1.12; opacity: .72; }
-.project-audi-copy { display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: 23px 32px 25px; background: #f4f8f5; }
+.project-audi-copy { display: flex; flex-direction: column; justify-content: space-between; gap: 10px; align-items: flex-start; padding: 23px 32px 25px; background: #f4f8f5; }
 .project-audi-copy h3 { font: 700 1.2rem "Bricolage Grotesque", sans-serif; margin: 0 0 4px; }
 .project-audi-copy p { margin: 0; font-size: .95rem; color: var(--slate); }
-.project-audi-copy .tags { justify-content: flex-end; }
+.project-audi-copy .tags { justify-content: flex-start; margin-top: 0; }
 .project-audi-copy .tags span { background: #fff; }
 .audi-fallback { background-image: linear-gradient(90deg, rgba(7,12,18,.72), rgba(7,12,18,.12)), var(--audi-image); background-size: cover; background-position: center; }
 .audi-fallback canvas, .audi-fallback .audi-montage-glow { display: none; }
