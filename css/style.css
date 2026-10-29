@@ -260,7 +260,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .footer a:hover { color: var(--duck); }
 
 /* ---------- EKG-Rhythmus-Simulation ---------- */
-.rhythm-widget { --rhythm-accent: #55D6B0; position: fixed; z-index: 44; top: 52%; right: clamp(12px, 2vw, 28px); width: 196px; padding: 12px; border: 1px solid rgba(255,255,255,.16); border-radius: 22px; color: #F6FAF8; background: linear-gradient(145deg, rgba(11,34,39,.96), rgba(16,51,58,.94)); box-shadow: 0 18px 46px -22px rgba(0,0,0,.72), 0 0 0 1px rgba(85,214,176,.08); backdrop-filter: blur(12px); transform: translateY(-50%); opacity: 0; animation: rhythm-enter .8s .8s var(--ease) forwards; }
+.rhythm-widget { --rhythm-accent: #55D6B0; position: fixed; z-index: 44; top: 52%; right: clamp(12px, 2vw, 28px); width: 196px; padding: 12px; border: 1px solid rgba(255,255,255,.16); border-radius: 22px; color: #F6FAF8; background: linear-gradient(145deg, rgba(11,34,39,.96), rgba(16,51,58,.94)); box-shadow: 0 18px 46px -22px rgba(0,0,0,.72), 0 0 0 1px rgba(85,214,176,.08); backdrop-filter: blur(12px); transform: translateY(-50%); opacity: 1; animation: rhythm-enter .8s .2s var(--ease) both; }
 .rhythm-widget-head, .rhythm-widget-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .rhythm-widget-title { display: flex; align-items: center; gap: 8px; font-size: .76rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: rgba(246,250,248,.88); }
 .rhythm-live-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--rhythm-accent); box-shadow: 0 0 12px var(--rhythm-accent); animation: rhythm-dot 1.2s ease-in-out infinite; }
