@@ -1,0 +1,221 @@
+<!doctype html>
+<!--
+ ╔═══════════════════════════════════════════════════════════╗
+ ║   P R O F E S S O R E N T E   ·   P O R T F O L I O       ║
+ ║   Jayden aka ProfessorEnte – FiveM Developer              ║
+ ╚═══════════════════════════════════════════════════════════╝
+-->
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProfessorEnte – Jayden | FiveM Developer, Support und Management</title>
+  <meta name="description" content="Jayden aka ProfessorEnte: FiveM-Entwickler mit viel Management-Erfahrung. Scripts, eigenes Spiel Dead Yard und Projekte für Server-Owner.">
+  <meta name="theme-color" content="#10333A">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="progress" aria-hidden="true">
+  <div class="progress-bar" id="progressBar"></div>
+  <svg class="progress-duck" id="progressDuck" viewBox="0 0 40 32"><ellipse cx="17" cy="21" rx="14" ry="9" fill="#F7C14B"/><circle cx="28" cy="12" r="8" fill="#F7C14B"/><ellipse cx="35" cy="14" rx="5" ry="2.6" fill="#E4572E"/><circle cx="29" cy="10" r="1.6" fill="#0B2227"/></svg>
+</div>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="ProfessorEnte, nach oben">
+    <svg viewBox="0 0 40 32" aria-hidden="true"><ellipse cx="17" cy="21" rx="14" ry="9" fill="#F7C14B"/><circle cx="28" cy="12" r="8" fill="#F7C14B"/><ellipse cx="35" cy="14" rx="5" ry="2.6" fill="#E4572E"/><circle cx="29" cy="10" r="1.6" fill="#0B2227"/></svg>
+    <span>ProfessorEnte</span>
+  </a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navLinks"><span></span><span></span></button>
+  <nav class="nav-links" id="navLinks">
+    <a href="#ueber-mich">Über mich</a>
+    <a href="#rollen">Rollen</a>
+    <a href="#scripts">Scripts</a>
+    <a href="#dead-yard">Dead Yard</a>
+    <a href="#projekte">Projekte</a>
+    <a href="#kontakt" class="nav-cta">Kontakt</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <canvas class="ripple-canvas" id="rippleCanvas" aria-hidden="true"></canvas>
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <p class="hero-aka" id="heroAka">Jayden, online bekannt als</p>
+        <h1 class="hero-title" id="heroTitle" aria-label="ProfessorEnte">ProfessorEnte</h1>
+        <p class="hero-lead" id="heroLead">FiveM-Entwickler mit viel Management-Erfahrung und einem Herz für Support. Ich baue Systeme, die fertig sind, und Teams, die funktionieren.</p>
+        <div class="hero-actions" id="heroActions">
+          <a class="btn btn-primary" href="#scripts">Meine Scripts ansehen</a>
+          <a class="btn btn-ghost" href="https://professorente.itch.io/dead-yard" target="_blank" rel="noopener">Dead Yard spielen</a>
+        </div>
+        <ul class="hero-roles" id="heroRoles" aria-label="Rollen">
+          <li>Support</li><li>Management</li><li>Development</li>
+        </ul>
+      </div>
+
+      <div class="hero-duck" id="duckWrap">
+        <svg id="duck" viewBox="0 0 420 400" role="img" aria-label="Die ProfessorEnte: eine Ente mit Doktorhut, Brille und Fliege">
+          <g class="ripples">
+            <ellipse class="rp rp1" cx="210" cy="332" rx="150" ry="20"/>
+            <ellipse class="rp rp2" cx="210" cy="332" rx="150" ry="20"/>
+            <ellipse class="rp rp3" cx="210" cy="332" rx="150" ry="20"/>
+          </g>
+          <g class="duck-drop" id="duckDrop">
+            <g class="duck-bob">
+              <path d="M94 262 C60 235 52 205 70 190 C86 218 112 228 134 236 Z" fill="#E7A21F"/>
+              <path d="M84 270 C84 218 150 196 214 200 C290 204 342 236 338 286 C334 326 270 340 206 340 C130 340 84 318 84 270 Z" fill="#F7C14B"/>
+              <path class="wing" d="M130 268 C150 236 210 232 244 262 C228 300 160 310 130 268 Z" fill="#E7A21F"/>
+              <path d="M226 214 C214 176 226 150 250 140 L322 140 C328 170 322 200 304 222 C280 236 246 232 226 214 Z" fill="#F7C14B"/>
+              <circle cx="278" cy="132" r="64" fill="#F7C14B"/>
+              <ellipse cx="232" cy="156" rx="11" ry="7" fill="#F2A33A" opacity=".55"/>
+              <ellipse cx="326" cy="156" rx="11" ry="7" fill="#F2A33A" opacity=".55"/>
+              <ellipse cx="280" cy="174" rx="36" ry="17" fill="#E4572E"/>
+              <path d="M252 173 Q280 182 308 173" stroke="#B63E1C" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <circle cx="254" cy="130" r="23" fill="#fff" fill-opacity=".9"/>
+              <circle cx="306" cy="130" r="23" fill="#fff" fill-opacity=".9"/>
+              <g class="pupil" id="pupilL"><circle cx="254" cy="130" r="9" fill="#0B2227"/><circle cx="251" cy="126" r="3" fill="#fff"/></g>
+              <g class="pupil" id="pupilR"><circle cx="306" cy="130" r="9" fill="#0B2227"/><circle cx="303" cy="126" r="3" fill="#fff"/></g>
+              <circle cx="254" cy="130" r="23" fill="none" stroke="#0B2227" stroke-width="5"/>
+              <circle cx="306" cy="130" r="23" fill="none" stroke="#0B2227" stroke-width="5"/>
+              <path d="M277 127 Q280 121 283 127" stroke="#0B2227" stroke-width="5" fill="none" stroke-linecap="round"/>
+              <path d="M231 126 L216 120 M329 126 L344 120" stroke="#0B2227" stroke-width="4" stroke-linecap="round"/>
+              <path d="M240 80 L240 96 C264 106 296 106 320 96 L320 80 Z" fill="#10333A"/>
+              <polygon points="196,76 280,48 364,76 280,102" fill="#0B2227"/>
+              <path class="tassel" d="M280 76 L352 82 L354 114" stroke="#F4B63A" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle class="tassel" cx="354" cy="118" r="6" fill="#F4B63A"/>
+              <polygon points="262,218 280,230 262,244" fill="#E4572E"/>
+              <polygon points="298,218 280,230 298,244" fill="#E4572E"/>
+              <circle cx="280" cy="230" r="6" fill="#B63E1C"/>
+            </g>
+            <path class="water-front" d="M62 322 Q100 304 140 322 T220 322 T300 322 T358 322 Q362 352 210 358 Q58 352 62 322 Z" fill="#2F7A85" fill-opacity=".55"/>
+          </g>
+        </svg>
+        <p class="duck-hint" id="duckHint">Tipp: Beweg die Maus, die Ente schaut dir hinterher.</p>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#ueber-mich" aria-label="Zum nächsten Abschnitt"><span></span></a>
+  </section>
+
+  <!-- ÜBER MICH -->
+  <section class="section about" id="ueber-mich">
+    <div class="container about-grid">
+      <div>
+        <h2 class="h2 reveal-clip">Entwickler, Teamplayer, Dauerlerner.</h2>
+      </div>
+      <div class="about-body">
+        <p class="reveal">Ich bin Jayden, im Netz ProfessorEnte, manchmal auch ProfessorDuck. Ich baue FiveM-Server und die Systeme, die darauf laufen: von medizinischer Simulation über Admin-Tools bis zu Fahrzeugmechanik.</p>
+        <p class="reveal">Daneben entwickle ich Webseiten, Browserspiele und Mods. Wenn ich etwas anfange, dann richtig: vollständig, getestet und mit Liebe zum Detail. Dazu kommt viel Erfahrung im Management. Ich kann ein bisschen was von allem und fühle mich in Support, Management und Entwicklung gleichermaßen zu Hause.</p>
+        <dl class="facts reveal">
+          <div><dt>Handle</dt><dd>ProfessorEnte (ProfessorDuck)</dd></div>
+          <div><dt>Schwerpunkte</dt><dd>FiveM und Lua, Webentwicklung, Game Modding</dd></div>
+          <div><dt>Passt zu</dt><dd>Support-Team, Management, Development</dd></div>
+          <div><dt>Lerne gerade</dt><dd>Car Development, MLOs, Skinning von Fahrzeugen und Kleidung</dd></div>
+          <div><dt>Arbeitssprache</dt><dd>Deutsch</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROLLEN -->
+  <section class="section roles" id="rollen">
+    <div class="container">
+      <h2 class="h2 reveal-clip">Wofür du mich ins Team holen kannst.</h2>
+      <p class="section-lead reveal">Drei Bereiche, in denen ich Verantwortung übernehmen kann. Wähle einen aus.</p>
+      <div class="roles-box">
+        <div class="role-tabs" role="tablist" aria-label="Rollen" id="roleTabs"></div>
+        <div class="role-panel" id="rolePanel" role="tabpanel" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCRIPTS -->
+  <section class="section scripts" id="scripts">
+    <div class="container">
+      <div class="scripts-head">
+        <div>
+          <h2 class="h2 reveal-clip">Meine FiveM-Scripts.</h2>
+          <p class="section-lead reveal"><span id="scriptCount">0</span> Resources, die ich selbst entwickelt habe. Klick auf eine Karte für die Details.</p>
+        </div>
+        <div class="chips" id="scriptFilters" role="group" aria-label="Scripts filtern"></div>
+      </div>
+      <div class="script-grid" id="scriptGrid"></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-label="Werkzeugkasten">
+    <div class="marquee-track" id="marqueeTrack"></div>
+  </div>
+
+  <!-- DEAD YARD -->
+  <section class="section yard" id="dead-yard">
+    <div class="container yard-grid">
+      <div class="yard-copy">
+        <h2 class="h2 reveal-clip">Mein eigenes Spiel: Dead Yard.</h2>
+        <p class="reveal">Ein Top-Down-Zombie-Survival-Shooter, der direkt im Browser läuft. Acht Waffen, sieben Zombie-Typen, Shop mit Upgrades, Steuerung für PC und Touch.</p>
+        <p class="reveal">Besonders daran: ein eigenes Medical-&-Survival-System mit medizinischem Inventar, animiertem EKG, kritischem Zustand, Notfall-Minispiel und Überdosis-Mechanik. Medizin ist mein Spezialgebiet, und hier steckt sie im Gameplay.</p>
+        <div class="ecg-box reveal" aria-hidden="true">
+          <svg viewBox="0 0 900 120" preserveAspectRatio="none" class="ecg">
+            <path class="ecg-base" d="M0 70 H120 l10 -8 l10 16 l10 -50 l12 74 l10 -32 l10 0 H340 l10 -8 l10 16 l10 -50 l12 74 l10 -32 l10 0 H560 l10 -8 l10 16 l10 -50 l12 74 l10 -32 l10 0 H780 l10 -8 l10 16 l10 -50 l12 74 l10 -32 l10 0 H900"/>
+            <path class="ecg-live" pathLength="1000" d="M0 70 H120 l10 -8 l10 16 l10 -50 l12 74 l10 -32 l10 0 H340 l10 -8 l10 16 l10 -50 l12 74 l10 -32 l10 0 H560 l10 -8 l10 16 l10 -50 l12 74 l10 -32 l10 0 H780 l10 -8 l10 16 l10 -50 l12 74 l10 -32 l10 0 H900"/>
+          </svg>
+          <p class="ecg-bpm"><strong id="bpm">74</strong> BPM</p>
+        </div>
+        <a class="btn btn-duck" href="https://professorente.itch.io/dead-yard" target="_blank" rel="noopener">Dead Yard auf itch.io spielen</a>
+      </div>
+      <div class="yard-demo reveal">
+        <canvas id="yardCanvas" aria-label="Kleine Dead-Yard-Demo: Maus bewegen zum Zielen, klicken zum Schießen"></canvas>
+        <div class="yard-hud"><span>Treffer: <b id="yardKills">0</b></span><span>Leben: <b id="yardLife">5</b></span></div>
+        <p class="yard-hint" id="yardHint">Mini-Demo: Zielen mit der Maus, klicken oder tippen zum Schießen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEITERE PROJEKTE -->
+  <section class="section projects" id="projekte">
+    <div class="container">
+      <h2 class="h2 reveal-clip">Weitere Projekte.</h2>
+      <p class="section-lead reveal">Neben FiveM baue ich Spiele, Mods, Webseiten und Apps.</p>
+      <ul class="project-list" id="projectList"></ul>
+    </div>
+  </section>
+
+  <!-- LERNE GERADE -->
+  <section class="section learning" id="lerne-gerade">
+    <div class="container">
+      <h2 class="h2 reveal-clip">Woran ich gerade lerne.</h2>
+      <p class="section-lead reveal">Ich bleibe nicht stehen. Diese drei Felder erweitern gerade mein Können.</p>
+      <div class="learn-grid" id="learnGrid"></div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section class="section contact" id="kontakt">
+    <div class="container contact-inner">
+      <h2 class="h2 reveal-clip">Lass uns reden.</h2>
+      <p class="section-lead reveal">Du suchst Verstärkung für dein Server-Team in Support, Management oder Entwicklung? Ich freue mich auf deine Nachricht.</p>
+      <div class="contact-links" id="contactLinks"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <p>© <span id="year">2026</span> ProfessorEnte (Jayden). Alle Rechte vorbehalten.</p>
+    <a href="#top">Nach oben</a>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
