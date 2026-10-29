@@ -322,11 +322,13 @@
     var items = [];
     function isUrl(v) { return /^https?:\/\//i.test(v); }
     if (C.email) items.push({ label: 'E-Mail schreiben', href: 'mailto:' + C.email, main: true });
-    if (C.discord) {
+    if (C.discordProfile) items.push({ label: 'Discord-Profil: ' + (C.discordName || 'ProfessorEnte'), href: C.discordProfile, main: !C.email });
+    else if (C.discord) {
       if (isUrl(C.discord)) items.push({ label: 'Auf Discord melden', href: C.discord, main: !C.email });
       else items.push({ label: 'Discord: ' + C.discord, copy: C.discord, main: !C.email });
     }
-    if (C.itchProfile) items.push({ label: 'Mein itch.io-Profil', href: C.itchProfile, main: !C.email && !C.discord });
+    if (C.discordInvite) items.push({ label: 'Discord-Server beitreten', href: C.discordInvite });
+    if (C.itchProfile) items.push({ label: 'Mein itch.io-Profil', href: C.itchProfile, main: !C.email && !C.discordProfile && !C.discord });
     if (C.deadYard) items.push({ label: 'Dead Yard spielen', href: C.deadYard });
     if (C.github) items.push({ label: 'GitHub', href: C.github });
     if (C.youtube) items.push({ label: 'YouTube', href: C.youtube });
@@ -346,7 +348,8 @@
         if (!/^mailto:/.test(it.href)) { el.target = '_blank'; el.rel = 'noopener'; }
       }
       if (!el.textContent) el.textContent = it.label;
-      if (it.main) el.className = 'main';
+      el.className = 'contact-link reveal';
+      if (it.main) el.classList.add('main');
       box.appendChild(el);
     });
   }

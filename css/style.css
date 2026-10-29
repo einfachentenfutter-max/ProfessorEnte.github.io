@@ -242,7 +242,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .contact .section-lead { color: rgba(246,250,248,.78); }
 .contact .h2 { font-size: clamp(2.6rem, 7vw, 5.6rem); max-width: 12ch; }
 .contact-links { display: flex; flex-wrap: wrap; gap: 14px; }
-.contact-links a { text-decoration: none; padding: 16px 30px; border-radius: 999px; font-weight: 600; border: 2px solid rgba(246,250,248,.35); transition: background .25s, color .25s, border-color .25s, transform .25s var(--ease); }
+.contact-links a { position: relative; overflow: hidden; text-decoration: none; padding: 16px 30px; border-radius: 999px; font-weight: 600; border: 2px solid rgba(246,250,248,.35); transition: background .25s, color .25s, border-color .25s, transform .25s var(--ease); }
+.contact-links a.reveal { transition: opacity .65s var(--ease), transform .65s var(--ease), background .25s, color .25s, border-color .25s; }
+.contact-links a::after { content: ""; position: absolute; top: -60%; bottom: -60%; left: -45%; width: 24%; pointer-events: none; background: rgba(255,255,255,.16); transform: rotate(24deg); transition: left .65s var(--ease); }
+.contact-links a:hover::after { left: 130%; }
 .contact-links a:hover { transform: translateY(-3px); background: var(--paper); color: var(--pond-950); border-color: var(--paper); }
 .contact-links a.main { background: var(--duck); color: var(--pond-950); border-color: var(--duck); }
 .contact-links a.main:hover { background: var(--paper); border-color: var(--paper); }
