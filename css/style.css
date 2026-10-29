@@ -242,6 +242,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .audi-montage-top, .audi-montage-bottom { position: absolute; z-index: 3; left: clamp(22px, 5vw, 64px); right: clamp(22px, 5vw, 64px); display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
 .audi-montage-top { top: 28px; }
 .audi-montage-bottom { bottom: 30px; align-items: end; }
+.audi-top-actions { display: flex; align-items: center; gap: 10px; pointer-events: auto; }
 .audi-kicker, .audi-build-state, .audi-index { display: inline-flex; align-items: center; gap: 9px; font: 700 .7rem/1.2 "Figtree", sans-serif; letter-spacing: .16em; }
 .audi-kicker { color: rgba(231,246,248,.8); }
 .audi-kicker i { width: 8px; height: 8px; border-radius: 50%; background: #51e4c2; box-shadow: 0 0 16px #51e4c2; animation: audi-led 1.5s ease-in-out infinite; }
@@ -366,6 +367,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .project-audi .audi-montage { min-height: 400px; height: 64vw; max-height: 500px; }
   .project-audi-copy { align-items: flex-start; flex-direction: column; padding: 22px 24px; }
   .project-audi-copy .tags { margin-top: 0; }
+  .audi-montage-top { align-items: flex-start; gap: 10px; }
+  .audi-top-actions { flex-direction: column; align-items: flex-end; gap: 6px; }
+  .audi-build-state { padding: 7px 10px; font-size: .58rem; }
+  .audi-replay { padding: 9px 12px; font-size: .78rem; }
   .scroll-cue { display: none; }
 }
 @media (max-width: 760px) {
