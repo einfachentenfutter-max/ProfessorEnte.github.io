@@ -859,3 +859,15 @@ body[data-theme="light"][data-celebration="valentines"] { --mist: #f6eaf0; --mis
   .theme-gear span { animation: none; }
   .duck-rain span { display: none; }
 }
+
+/* ---------- Stummer Video-Hintergrund für Discobitch ---------- */
+.music-video-backdrop { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .45s ease, visibility .45s; }
+.hero.music-video .music-video-backdrop { opacity: 1; visibility: visible; }
+.music-video-shade { position: absolute; z-index: 0; inset: 0; background: linear-gradient(90deg, rgba(14,12,24,.66), rgba(14,12,24,.22) 66%, rgba(14,12,24,.42)); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .45s ease, visibility .45s; }
+.hero.music-video .music-video-shade { opacity: 1; visibility: visible; }
+.hero.music-video .hero-aka, .hero.music-video .hero-title, .hero.music-video .hero-lead, .hero.music-video .hero-roles, .hero.music-video .duck-hint { color: #fff8ee; text-shadow: 0 2px 16px rgba(0,0,0,.48); }
+.hero.music-video .hero-roles li { background: rgba(255,255,255,.16); }
+.hero.music-video .btn-ghost { color: #fff8ee; border-color: rgba(255,255,255,.75); }
+.hero.music-video .btn-ghost:hover { background: rgba(255,255,255,.18); color: #fff; }
+.hero.music-video .scroll-cue { border-color: #fff8ee; }
+.hero.music-video .scroll-cue span { background: #fff8ee; }

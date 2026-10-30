@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261030-strausberg2">
+  <link rel="stylesheet" href="css/style.css?v=20261030-discobitch1">
   <script>document.documentElement.classList.add('has-site-loader');</script>
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}
@@ -78,6 +78,10 @@
   <!-- HERO -->
   <section class="hero" id="hero">
     <div class="galaxy-backdrop" id="galaxyBackdrop" aria-hidden="true"><span></span><span></span><span></span></div>
+    <video class="music-video-backdrop" id="musicVideoBackdrop" muted loop playsinline preload="none" aria-hidden="true">
+      <source src="assets/music/discobitch-background.mp4" type="video/mp4">
+    </video>
+    <div class="music-video-shade" aria-hidden="true"></div>
     <canvas class="ripple-canvas" id="rippleCanvas" aria-hidden="true"></canvas>
     <div class="time-glow" aria-hidden="true"></div>
     <div class="container hero-grid">
@@ -491,6 +495,7 @@
       <option value="assets/music/alle-meine-entchen-variationen.mp3?v=20261030-music4">Alle meine Entchen — Variationen</option>
       <option value="assets/music/rihanna-disturbia.mp3">Disturbia — Rihanna</option>
       <option value="assets/music/me-and-the-devil-lucila.mp3">Me and the Devil — Lucila</option>
+      <option value="assets/music/discobitch-cest-beau-la-bourgeoisie.mp3">C'est Beau La Bourgeoisie — Discobitch</option>
     </select>
     <button class="music-skip" id="musicNext" type="button" aria-label="Nächster Titel">▶|</button>
   </div>
@@ -501,6 +506,6 @@
 <script src="js/config.js?v=20261030-ecg1"></script>
 <script src="js/data.js?v=20261030-strausberg2"></script>
 <script type="module" src="js/audi-montage.js?v=20261030-music2"></script>
-<script src="js/main.js?v=20261030-strausberg2" defer></script>
+<script src="js/main.js?v=20261030-discobitch1" defer></script>
 </body>
 </html>

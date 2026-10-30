@@ -192,9 +192,9 @@
     var audio = $('#musicAudio'), button = $('#musicToggle'), slider = $('#musicVolume');
     var select = $('#musicTrack'), title = $('#musicTitle'), state = $('#musicState'), player = $('#musicPlayer');
     var previous = $('#musicPrevious'), next = $('#musicNext');
-    var hero = $('#hero');
+    var hero = $('#hero'), sceneVideo = $('#musicVideoBackdrop');
     if (!audio || !button || !slider || !select || !title || !state || !player) return;
-    var musicScenes = ['music-galaxy', 'music-golden', 'music-disco', 'music-ducklings', 'music-disco', 'music-devil'];
+    var musicScenes = ['music-galaxy', 'music-golden', 'music-disco', 'music-ducklings', 'music-disco', 'music-devil', 'music-video'];
 
     function selectedUrl() { return new URL(select.value, document.baseURI).href; }
     function updateUI() {
@@ -206,10 +206,19 @@
       player.classList.toggle('is-playing', playing);
       state.textContent = playing ? 'Spielt gerade' : 'Bereit zum Abspielen';
       if (hero) {
-        hero.classList.remove('music-galaxy', 'music-golden', 'music-disco', 'music-ducklings', 'music-devil');
+        hero.classList.remove('music-galaxy', 'music-golden', 'music-disco', 'music-ducklings', 'music-devil', 'music-video');
         var scene = musicScenes[select.selectedIndex];
         if (scene) hero.classList.add(scene);
         hero.classList.toggle('music-playing', playing);
+        if (sceneVideo) {
+          if (playing && select.selectedIndex === 6) {
+            var videoPromise = sceneVideo.play();
+            if (videoPromise && videoPromise.catch) videoPromise.catch(function () { state.textContent = 'Video-Hintergrund konnte nicht gestartet werden'; });
+          } else {
+            sceneVideo.pause();
+            try { sceneVideo.currentTime = 0; } catch (error) {}
+          }
+        }
       }
     }
     function loadSelected() {
@@ -247,7 +256,10 @@
     slider.addEventListener('input', function () { audio.volume = Number(slider.value) / 100; });
     audio.addEventListener('play', updateUI);
     audio.addEventListener('pause', updateUI);
-    audio.addEventListener('ended', function () { moveTrack(1, true); });
+    audio.addEventListener('ended', function () {
+      if (sceneVideo) { sceneVideo.pause(); try { sceneVideo.currentTime = 0; } catch (error) {} }
+      moveTrack(1, true);
+    });
     audio.addEventListener('error', function () { state.textContent = 'Datei konnte nicht geladen werden'; });
     select.addEventListener('change', updateUI);
     document.addEventListener('visibilitychange', function () { if (document.hidden) audio.pause(); });
