@@ -299,8 +299,8 @@
       var tags = p.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
       if (p.title === 'Audi-Autohaus-Website') {
         return '<li class="reveal project-audi"><div class="audi-montage" id="audiMontage">' +
-          '<img class="audi-static-image" src="assets/audi-angularfront.avif" alt="Audi in Front-Schrägansicht" loading="lazy">' +
           '<canvas id="audiMontageCanvas" aria-label="3D-Montage: Das originale Audi-RS-6-Modell setzt sich aus bewegten Bauteilen zusammen."></canvas>' +
+          '<div class="audi-loading" id="audiLoading" role="status" aria-live="polite"><span class="audi-spinner" aria-hidden="true"></span><span id="audiLoadingCopy">Der Audi RS 6 wird in den Showroom geladen …</span></div>' +
           '<div class="audi-montage-glow" aria-hidden="true"></div>' +
           '<div class="audi-montage-top"><span class="audi-kicker"><i></i> THREE.JS · RS 6 AVANT</span><div class="audi-top-actions"><span class="audi-build-state" id="audiBuildState">MONTAGE LÄUFT</span>' +
           '<button class="audi-replay" id="audiReplay" type="button"><span aria-hidden="true">↻</span> Montage neu starten</button></div></div>' +
