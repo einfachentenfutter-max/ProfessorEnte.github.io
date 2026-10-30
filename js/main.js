@@ -192,7 +192,9 @@
     var audio = $('#musicAudio'), button = $('#musicToggle'), slider = $('#musicVolume');
     var select = $('#musicTrack'), title = $('#musicTitle'), state = $('#musicState'), player = $('#musicPlayer');
     var previous = $('#musicPrevious'), next = $('#musicNext');
+    var hero = $('#hero');
     if (!audio || !button || !slider || !select || !title || !state || !player) return;
+    var musicScenes = ['music-galaxy', '', 'music-disco', 'music-ducklings', 'music-disco', 'music-devil'];
 
     function selectedUrl() { return new URL(select.value, document.baseURI).href; }
     function updateUI() {
@@ -203,6 +205,12 @@
       button.setAttribute('aria-label', playing ? 'Musik pausieren' : 'Musik starten');
       player.classList.toggle('is-playing', playing);
       state.textContent = playing ? 'Spielt gerade' : 'Bereit zum Abspielen';
+      if (hero) {
+        hero.classList.remove('music-galaxy', 'music-disco', 'music-ducklings', 'music-devil');
+        var scene = musicScenes[select.selectedIndex];
+        if (scene) hero.classList.add(scene);
+        hero.classList.toggle('music-playing', playing);
+      }
     }
     function loadSelected() {
       var url = selectedUrl();
@@ -241,6 +249,7 @@
     audio.addEventListener('pause', updateUI);
     audio.addEventListener('ended', function () { moveTrack(1, true); });
     audio.addEventListener('error', function () { state.textContent = 'Datei konnte nicht geladen werden'; });
+    select.addEventListener('change', updateUI);
     document.addEventListener('visibilitychange', function () { if (document.hidden) audio.pause(); });
     updateUI();
   }

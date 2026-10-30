@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261030-music2">
+  <link rel="stylesheet" href="css/style.css?v=20261030-music3">
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}
   </script>
@@ -66,11 +66,20 @@
       </div>
 
       <div class="hero-duck" id="duckWrap">
+        <div class="galaxy-backdrop" id="galaxyBackdrop" aria-hidden="true"><span></span><span></span><span></span></div>
         <svg id="duck" class="egg-trigger" viewBox="0 0 420 400" role="button" tabindex="0" aria-label="ProfessorEnte-Ente, mehrfach aktivieren">
           <g class="ripples">
             <ellipse class="rp rp1" cx="210" cy="332" rx="150" ry="20"/>
             <ellipse class="rp rp2" cx="210" cy="332" rx="150" ry="20"/>
             <ellipse class="rp rp3" cx="210" cy="332" rx="150" ry="20"/>
+          </g>
+          <g id="devilWings" aria-hidden="true">
+            <path class="devil-wing devil-wing-left" d="M137 248 C103 211 62 207 29 222 C52 232 24 242 20 261 C48 253 38 276 46 294 C70 274 92 281 111 306 Z" fill="#8D263E" stroke="#F56B78" stroke-width="3" stroke-linejoin="round"/>
+            <path class="devil-wing devil-wing-right" d="M302 242 C333 207 372 205 398 219 C379 232 399 244 401 260 C379 255 386 276 376 293 C355 274 336 281 314 306 Z" fill="#8D263E" stroke="#F56B78" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M42 226 L57 246 L34 253 L63 262 L48 284 L79 269 L101 291 L95 260 L119 250 L90 245 L77 222 L69 243 Z" fill="#D74860" opacity=".9"/>
+            <path d="M386 224 L369 244 L393 253 L363 261 L377 282 L349 269 L327 291 L333 260 L309 250 L337 245 L351 222 L359 243 Z" fill="#D74860" opacity=".9"/>
+            <path d="M101 298 C77 323 61 319 54 302 C50 291 58 285 69 289 C78 292 75 301 68 302" fill="none" stroke="#C83450" stroke-width="9" stroke-linecap="round"/>
+            <path d="M50 300 L47 283 L64 291 L79 283 L74 302 L61 311 Z" fill="#C83450"/>
           </g>
           <g class="duck-drop" id="duckDrop">
             <g class="duck-bob">
@@ -99,9 +108,43 @@
               <polygon points="298,218 280,230 298,244" fill="#E4572E"/>
               <circle cx="280" cy="230" r="6" fill="#B63E1C"/>
             </g>
+            <g id="devilHorns" aria-hidden="true">
+              <path d="M231 98 C218 82 215 59 225 38 C230 55 243 62 249 76 L247 98 Z" fill="#C83450" stroke="#8D263E" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M311 98 C324 82 327 59 317 38 C312 55 299 62 293 76 L295 98 Z" fill="#C83450" stroke="#8D263E" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M224 43 Q229 64 242 75 M318 43 Q313 64 300 75" fill="none" stroke="#FF9BA3" stroke-width="3" stroke-linecap="round"/>
+            </g>
             <path class="water-front" d="M62 322 Q100 304 140 322 T220 322 T300 322 T358 322 Q362 352 210 358 Q58 352 62 322 Z" fill="#2F7A85" fill-opacity=".55"/>
           </g>
         </svg>
+        <div class="disco-set" id="discoSet" aria-hidden="true">
+          <span class="disco-thread"></span>
+          <div class="disco-beams"></div>
+          <div class="disco-sphere"><i></i></div>
+          <span class="disco-glint">✦</span>
+        </div>
+        <div class="duckling-school" id="ducklingSchool" aria-hidden="true">
+          <svg class="duckling duckling-one" viewBox="0 0 100 72">
+            <ellipse cx="48" cy="60" rx="44" ry="8" fill="#2F7A85" opacity=".4"/>
+            <path d="M12 49 Q17 35 42 38 Q57 39 65 50 Q59 62 35 62 Q18 61 12 49Z" fill="#F4B63A"/>
+            <path d="M15 48 Q4 38 8 32 Q18 39 27 42Z" fill="#E7A21F"/>
+            <g class="duckling-head"><circle cx="42" cy="30" r="16" fill="#F7C14B"/><ellipse cx="56" cy="34" rx="10" ry="5" fill="#E4572E"/><circle cx="47" cy="27" r="2.4" fill="#0B2227"/></g>
+            <path d="M4 54 Q28 49 50 54 T96 54" fill="none" stroke="#7BC7C4" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <svg class="duckling duckling-two" viewBox="0 0 100 72">
+            <ellipse cx="48" cy="60" rx="44" ry="8" fill="#2F7A85" opacity=".4"/>
+            <path d="M12 49 Q17 35 42 38 Q57 39 65 50 Q59 62 35 62 Q18 61 12 49Z" fill="#F7C14B"/>
+            <path d="M15 48 Q4 38 8 32 Q18 39 27 42Z" fill="#E7A21F"/>
+            <g class="duckling-head"><circle cx="42" cy="30" r="16" fill="#F7C14B"/><ellipse cx="56" cy="34" rx="10" ry="5" fill="#E4572E"/><circle cx="47" cy="27" r="2.4" fill="#0B2227"/></g>
+            <path d="M4 54 Q28 49 50 54 T96 54" fill="none" stroke="#7BC7C4" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <svg class="duckling duckling-three" viewBox="0 0 100 72">
+            <ellipse cx="48" cy="60" rx="44" ry="8" fill="#2F7A85" opacity=".4"/>
+            <path d="M12 49 Q17 35 42 38 Q57 39 65 50 Q59 62 35 62 Q18 61 12 49Z" fill="#F4B63A"/>
+            <path d="M15 48 Q4 38 8 32 Q18 39 27 42Z" fill="#E7A21F"/>
+            <g class="duckling-head"><circle cx="42" cy="30" r="16" fill="#F7C14B"/><ellipse cx="56" cy="34" rx="10" ry="5" fill="#E4572E"/><circle cx="47" cy="27" r="2.4" fill="#0B2227"/></g>
+            <path d="M4 54 Q28 49 50 54 T96 54" fill="none" stroke="#7BC7C4" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
         <p class="duck-hint" id="duckHint">Tipp: Beweg die Maus, die Ente schaut dir hinterher.</p>
       </div>
     </div>
@@ -335,6 +378,6 @@
 <script src="js/config.js?v=20261030-ecg1"></script>
 <script src="js/data.js?v=20261030-music2"></script>
 <script type="module" src="js/audi-montage.js?v=20261030-music2"></script>
-<script src="js/main.js?v=20261030-music2" defer></script>
+<script src="js/main.js?v=20261030-music3" defer></script>
 </body>
 </html>
