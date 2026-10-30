@@ -157,13 +157,20 @@ window.PE_DATA = {
   ],
 
   projects: [
-    { title: 'Duck Wars', desc: 'Top-Down-Auto-Shooter im Browser mit 100 Levels und 12 Waffen.', tags: ['HTML5', 'Spiel'] },
-    { title: 'Unity-Horrorspiel', desc: 'Horrorspiel mit 28 C#-Scripts und deutscher Einrichtungsanleitung.', tags: ['Unity', 'C#'] },
-    { title: 'Chaos Mod', desc: 'Fabric-Mod für Minecraft 1.20.1, ausgeliefert als fertiges Paket.', tags: ['Fabric', 'Minecraft'] },
-    { title: 'DRK-Website im Röntgen-Look', desc: 'Scroll-Animation von der Wirbelsäule bis zum Kreuz, gebaut mit Three.js.', tags: ['Three.js', 'WebGL'] },
-    { title: 'Audi-Autohaus-Website', desc: 'Das originale Audi-RS-6-Modell setzt sich in einer interaktiven Three.js-Montage Teil für Teil zusammen.', tags: ['Three.js', 'FBX', '3D-Animation'] },
-    { title: 'SCP-Datenbank', desc: 'Fan-Website mit Tresor-Intro, Suche, Filtern und Fallakten.', tags: ['React', 'TypeScript', 'Tailwind'] },
-    { title: 'MedicNet', desc: 'App für den Sanitätsdienst: Patientenprotokolle, Unterschrift per Stift, Normwerte, Metronom.', tags: ['App', 'in Entwicklung'] }
+    { title: 'Duck Wars', desc: 'Top-Down-Auto-Shooter im Browser mit 100 Levels und 12 Waffen.', details: ['Ein eigenes Browser-Spiel aus der Vogelperspektive.', '100 Levels und 12 Waffen gehören zum Spielumfang.'], tags: ['HTML5', 'Spiel'] },
+    { title: 'Unity-Horrorspiel', desc: 'Horrorspiel mit 28 C#-Scripts und deutscher Einrichtungsanleitung.', details: ['Das Projekt umfasst 28 C#-Skripte.', 'Eine deutsche Anleitung erklärt die Einrichtung.'], tags: ['Unity', 'C#'] },
+    { title: 'Chaos Mod', desc: 'Fabric-Mod für Minecraft 1.20.1, ausgeliefert als fertiges Paket.', details: ['Für Minecraft 1.20.1 mit Fabric entwickelt.', 'Als fertiges Paket zum Einrichten vorbereitet.'], tags: ['Fabric', 'Minecraft'] },
+    { title: 'DRK-Website im Röntgen-Look', desc: 'Scroll-Animation von der Wirbelsäule bis zum Kreuz, gebaut mit Three.js.', details: ['Beim Scrollen führt die Animation von der Wirbelsäule bis zum Kreuz.', 'Die visuelle Umsetzung nutzt Three.js und WebGL.'], tags: ['Three.js', 'WebGL'] },
+    { title: 'Audi-Autohaus-Website', desc: 'Das originale Audi-RS-6-Modell setzt sich in einer interaktiven Three.js-Montage Teil für Teil zusammen.', details: ['Das originale RS 6 Avant-Modell wird Stück für Stück zusammengesetzt.', 'Du kannst die 3D-Szene drehen und die Montage neu starten.'], tags: ['Three.js', 'FBX', '3D-Animation'] },
+    { title: 'SCP-Datenbank', desc: 'Fan-Website mit Tresor-Intro, Suche, Filtern und Fallakten.', details: ['Ein Tresor-Intro bildet den Einstieg in die Fan-Website.', 'Suche und Filter helfen dabei, die Fallakten zu durchsuchen.'], tags: ['React', 'TypeScript', 'Tailwind'] },
+    { title: 'MedicNet', desc: 'App für den Sanitätsdienst: Patientenprotokolle, Unterschrift per Stift, Normwerte, Metronom.', details: ['Vereint Patientenprotokolle, Stift-Unterschrift, Normwerte und Metronom.', 'Das Projekt befindet sich in Entwicklung.'], tags: ['App', 'in Entwicklung'] }
+  ],
+
+  roadmap: [
+    { title: 'Car Development', text: 'Eigene Fahrzeuge für FiveM entwickeln – von der Handling-Abstimmung bis zum fertigen Add-on.', label: 'Lernfeld' },
+    { title: 'MLOs', text: 'Interiors gestalten und in Spielwelten einbinden, damit neue Orte spielbar werden.', label: 'Lernfeld' },
+    { title: 'Skinning', text: 'Eigene Designs und Texturen für Fahrzeuge und Kleidung umsetzen.', label: 'Lernfeld' },
+    { title: 'MedicNet', text: 'Die Sanitätsdienst-App mit Patientenprotokollen, Normwerten, Unterschrift und Metronom weiterentwickeln.', label: 'In Entwicklung' }
   ],
 
   learning: [

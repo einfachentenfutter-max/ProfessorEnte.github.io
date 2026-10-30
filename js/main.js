@@ -409,6 +409,10 @@
     if (!ul || !D.projects) return;
     ul.innerHTML = D.projects.map(function (p) {
       var tags = p.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
+      var detailList = (p.details || []).map(function (line) { return '<li>' + esc(line) + '</li>'; }).join('');
+      var details = detailList ? '<details class="project-details"><summary>Projekt-Details ansehen</summary><div class="project-detail-content"><ul>' + detailList + '</ul>' +
+        (p.url ? '<a class="project-detail-link" href="' + esc(p.url) + '" target="_blank" rel="noopener">' + esc(p.linkLabel || 'Projekt öffnen') + ' ↗</a>' : '') +
+        '</div></details>' : '';
       if (p.title === 'Audi-Autohaus-Website') {
         return '<li class="reveal project-audi"><div class="audi-montage" id="audiMontage">' +
           '<canvas id="audiMontageCanvas" aria-label="3D-Montage: Das originale Audi-RS-6-Modell setzt sich aus bewegten Bauteilen zusammen."></canvas>' +
@@ -418,9 +422,9 @@
           '<button class="audi-replay" id="audiReplay" type="button"><span aria-hidden="true">↻</span> Montage neu starten</button></div></div>' +
           '<div class="audi-montage-bottom"><div><span class="audi-index">01 / QUATTRO</span><h3>Audi, Stück für Stück.</h3><p>Der RS 6. Neu zusammengesetzt im Raum.</p></div></div>' +
           '<span class="audi-hint" aria-hidden="true">Ziehen zum Drehen <span>↔</span></span></div>' +
-          '<div class="project-audi-copy"><div><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p></div><div class="tags">' + tags + '</div></div></li>';
+          '<div class="project-audi-copy"><div><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p>' + details + '</div><div class="tags">' + tags + '</div></div></li>';
       }
-      return '<li class="reveal"><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><div class="tags">' + tags + '</div></li>';
+      return '<li class="reveal project-has-details"><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><div class="tags">' + tags + '</div>' + details + '</li>';
     }).join('');
     if (window.PE_AUDI_MONTAGE) window.PE_AUDI_MONTAGE.init();
   }
@@ -436,6 +440,15 @@
     if (!g || !D.learning) return;
     g.innerHTML = D.learning.map(function (l) {
       return '<article class="learn-card reveal">' + (ICONS[l.icon] || '') + '<h3>' + esc(l.title) + '</h3><p>' + esc(l.text) + '</p></article>';
+    }).join('');
+  }
+
+  function initRoadmap() {
+    var g = $('#roadmapList');
+    if (!g || !D.roadmap) return;
+    g.innerHTML = D.roadmap.map(function (item, index) {
+      return '<li class="roadmap-card reveal"><span class="roadmap-index" aria-hidden="true">' + String(index + 1).padStart(2, '0') + '</span>' +
+        '<div class="roadmap-copy"><h3>' + esc(item.title) + '</h3><p>' + esc(item.text) + '</p><span class="roadmap-label">' + esc(item.label) + '</span></div></li>';
     }).join('');
   }
 
@@ -764,6 +777,7 @@
     initMarquee();
     initProjects();
     initLearning();
+    initRoadmap();
     initContact();
     initYard();
     initRhythmWidget();
