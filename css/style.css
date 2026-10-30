@@ -126,24 +126,39 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* ---------- Lied-abhängige Enten-Show ---------- */
 .hero.music-playing #duck .duck-bob { animation: duck-dance 1.12s ease-in-out infinite; transform-origin: 210px 300px; }
 .hero.music-playing #duck .wing { animation: duck-wing-dance .56s ease-in-out infinite alternate; transform-origin: 190px 270px; }
-.galaxy-backdrop { position: absolute; z-index: 1; inset: -17%; overflow: visible; border-radius: 50%; opacity: 0; pointer-events: none; transition: opacity .8s ease; }
-.hero.music-galaxy .galaxy-backdrop { opacity: 1; }
-.galaxy-backdrop::before { content: ""; position: absolute; inset: 8%; border-radius: 50%; background: conic-gradient(from 35deg, transparent 0 12%, rgba(133,94,232,.35) 17%, transparent 31%, rgba(55,174,214,.28) 39%, transparent 55%, rgba(234,115,204,.25) 67%, transparent 82%); filter: blur(18px); mix-blend-mode: screen; animation: galaxy-drift 34s linear infinite; }
-.galaxy-backdrop::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(2px 2px at 12% 31%, #fff 70%, transparent), radial-gradient(1px 1px at 22% 72%, #fff 70%, transparent), radial-gradient(2px 2px at 33% 18%, #d9f4ff 70%, transparent), radial-gradient(1.5px 1.5px at 43% 83%, #fff 70%, transparent), radial-gradient(2px 2px at 57% 25%, #fff 70%, transparent), radial-gradient(1px 1px at 69% 61%, #d9f4ff 70%, transparent), radial-gradient(2px 2px at 81% 36%, #fff 70%, transparent), radial-gradient(1px 1px at 91% 76%, #fff 70%, transparent), radial-gradient(ellipse at 57% 48%, rgba(76,44,145,.26), transparent 58%); animation: galaxy-twinkle 4s ease-in-out infinite alternate; }
-.galaxy-backdrop span { position: absolute; width: 48%; aspect-ratio: 1; border-radius: 50%; filter: blur(25px); opacity: .48; }
-.galaxy-backdrop span:nth-child(1) { top: 2%; left: 15%; background: radial-gradient(circle, rgba(90,95,226,.65), transparent 70%); }
-.galaxy-backdrop span:nth-child(2) { right: 0; bottom: 10%; background: radial-gradient(circle, rgba(32,174,198,.46), transparent 70%); }
-.galaxy-backdrop span:nth-child(3) { top: 25%; right: 10%; background: radial-gradient(circle, rgba(227,99,185,.4), transparent 70%); }
+.galaxy-backdrop { position: absolute; z-index: 0; inset: 0; overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none; background: #080d22; transition: opacity .8s ease, visibility .8s; }
+.hero.music-galaxy .galaxy-backdrop, .hero.music-golden .galaxy-backdrop { opacity: 1; visibility: visible; }
+.galaxy-backdrop::before { content: ""; position: absolute; inset: -45%; background: radial-gradient(ellipse at 35% 36%, rgba(42,127,220,.26), transparent 22%), radial-gradient(ellipse at 66% 54%, rgba(139,62,203,.36), transparent 27%), radial-gradient(ellipse at 78% 31%, rgba(219,95,177,.2), transparent 18%), radial-gradient(ellipse at 25% 70%, rgba(37,181,204,.2), transparent 25%), conic-gradient(from 35deg at 53% 50%, transparent 0 11%, rgba(120,102,239,.22) 17%, transparent 28%, rgba(55,174,214,.18) 39%, transparent 51%, rgba(234,115,204,.2) 65%, transparent 82%); filter: blur(22px); mix-blend-mode: screen; animation: galaxy-drift 44s linear infinite; }
+.galaxy-backdrop::after { content: ""; position: absolute; inset: 0; background: radial-gradient(2px 2px at 4% 23%, #fff 70%, transparent), radial-gradient(1px 1px at 9% 79%, #d9f4ff 70%, transparent), radial-gradient(2px 2px at 15% 54%, #fff 70%, transparent), radial-gradient(1.5px 1.5px at 21% 12%, #fff 70%, transparent), radial-gradient(2px 2px at 27% 90%, #d9f4ff 70%, transparent), radial-gradient(1px 1px at 34% 38%, #fff 70%, transparent), radial-gradient(2px 2px at 41% 69%, #fff 70%, transparent), radial-gradient(1px 1px at 47% 19%, #d9f4ff 70%, transparent), radial-gradient(2px 2px at 54% 86%, #fff 70%, transparent), radial-gradient(1.5px 1.5px at 60% 44%, #fff 70%, transparent), radial-gradient(2px 2px at 67% 9%, #d9f4ff 70%, transparent), radial-gradient(1px 1px at 73% 75%, #fff 70%, transparent), radial-gradient(2px 2px at 80% 34%, #fff 70%, transparent), radial-gradient(1px 1px at 86% 92%, #d9f4ff 70%, transparent), radial-gradient(2px 2px at 93% 57%, #fff 70%, transparent), radial-gradient(1px 1px at 98% 14%, #fff 70%, transparent); animation: galaxy-twinkle 3.4s ease-in-out infinite alternate; }
+.galaxy-backdrop span { position: absolute; width: 55vw; min-width: 260px; aspect-ratio: 1; border-radius: 50%; filter: blur(38px); opacity: .42; }
+.galaxy-backdrop span:nth-child(1) { top: -35%; left: -5%; background: radial-gradient(circle, rgba(74,94,225,.64), transparent 70%); }
+.galaxy-backdrop span:nth-child(2) { right: -12%; bottom: -44%; background: radial-gradient(circle, rgba(24,174,198,.48), transparent 70%); }
+.galaxy-backdrop span:nth-child(3) { top: 18%; right: 23%; background: radial-gradient(circle, rgba(227,99,185,.35), transparent 70%); }
+.hero.music-golden .galaxy-backdrop { background: linear-gradient(125deg, #4C2B1C 0%, #8C5424 34%, #B98035 65%, #60371F 100%); }
+.hero.music-golden .galaxy-backdrop::before { inset: -25%; background: radial-gradient(ellipse at 25% 36%, rgba(247,193,75,.4), transparent 24%), radial-gradient(ellipse at 72% 68%, rgba(226,133,53,.3), transparent 29%), conic-gradient(from 20deg at 54% 50%, transparent 0 14%, rgba(255,215,125,.17) 21%, transparent 36%, rgba(177,98,44,.23) 51%, transparent 68%); filter: blur(30px); animation: galaxy-drift 48s linear infinite; }
+.hero.music-golden .galaxy-backdrop::after { background: radial-gradient(2px 2px at 8% 20%, #ffe7a3 70%, transparent), radial-gradient(1px 1px at 19% 72%, #fff1c7 70%, transparent), radial-gradient(2px 2px at 34% 45%, #fff 70%, transparent), radial-gradient(1.5px 1.5px at 53% 18%, #ffe7a3 70%, transparent), radial-gradient(2px 2px at 69% 82%, #fff1c7 70%, transparent), radial-gradient(1px 1px at 83% 31%, #fff 70%, transparent), radial-gradient(2px 2px at 94% 66%, #ffe7a3 70%, transparent); animation: galaxy-twinkle 2.6s ease-in-out infinite alternate; }
+.hero.music-golden .galaxy-backdrop span:nth-child(1) { background: radial-gradient(circle, rgba(255,206,112,.48), transparent 70%); }
+.hero.music-golden .galaxy-backdrop span:nth-child(2) { background: radial-gradient(circle, rgba(193,103,48,.42), transparent 70%); }
+.hero.music-golden .galaxy-backdrop span:nth-child(3) { background: radial-gradient(circle, rgba(255,224,148,.24), transparent 70%); }
+.hero.music-galaxy .hero-aka, .hero.music-galaxy .hero-title, .hero.music-galaxy .hero-lead, .hero.music-galaxy .hero-roles, .hero.music-galaxy .duck-hint, .hero.music-golden .hero-aka, .hero.music-golden .hero-title, .hero.music-golden .hero-lead, .hero.music-golden .hero-roles, .hero.music-golden .duck-hint { color: #FFF8EE; text-shadow: 0 2px 16px rgba(0,0,0,.28); }
+.hero.music-galaxy .hero-roles li, .hero.music-golden .hero-roles li { background: rgba(255,255,255,.13); }
+.hero.music-galaxy .btn-ghost, .hero.music-golden .btn-ghost { color: #FFF8EE; border-color: rgba(255,255,255,.75); }
+.hero.music-galaxy .btn-ghost:hover, .hero.music-golden .btn-ghost:hover { background: rgba(255,255,255,.18); color: #fff; }
+.hero.music-galaxy .scroll-cue, .hero.music-golden .scroll-cue { border-color: #FFF8EE; }
+.hero.music-galaxy .scroll-cue span, .hero.music-golden .scroll-cue span { background: #FFF8EE; }
 .hero.music-galaxy .hero-duck { filter: drop-shadow(0 12px 35px rgba(100,95,210,.2)); }
-.disco-set { position: absolute; z-index: 4; top: -8px; right: 4%; width: 92px; height: 116px; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-10px) scale(.8); transition: opacity .45s, transform .55s var(--ease), visibility .45s; }
+.disco-set { position: absolute; z-index: 4; top: -20px; right: 1%; width: 128px; height: 166px; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-10px) scale(.8); transition: opacity .45s, transform .55s var(--ease), visibility .45s; }
 .hero.music-disco .disco-set { opacity: 1; visibility: visible; transform: none; }
-.disco-thread { position: absolute; top: 0; left: 50%; width: 2px; height: 27px; background: linear-gradient(#71808c, #fff); transform: translateX(-50%); }
-.disco-beams { position: absolute; top: 24px; left: -60%; width: 220%; aspect-ratio: 1; border-radius: 50%; background: repeating-conic-gradient(from 3deg, rgba(255,241,164,.2) 0deg 5deg, transparent 5deg 23deg); filter: blur(4px); opacity: .7; animation: disco-rays 10s linear infinite; }
-.disco-sphere { position: absolute; top: 18px; left: 50%; width: 57px; height: 57px; overflow: hidden; border: 2px solid rgba(255,255,255,.92); border-radius: 50%; background: repeating-linear-gradient(0deg, transparent 0 8px, rgba(18,48,73,.45) 8px 10px), repeating-linear-gradient(90deg, transparent 0 8px, rgba(18,48,73,.4) 8px 10px), radial-gradient(circle at 32% 24%, #fff 0%, #aff3ff 10%, #a887ff 35%, #ee8fd0 62%, #243858 100%); box-shadow: 0 0 13px #fff, 0 0 30px rgba(134,209,255,.95), 0 0 52px rgba(252,130,207,.48); transform: translateX(-50%); animation: disco-spin 5.5s ease-in-out infinite alternate; }
+.disco-thread { position: absolute; top: 0; left: 50%; width: 2px; height: 36px; background: linear-gradient(#71808c, #fff); transform: translateX(-50%); box-shadow: 0 0 8px rgba(255,255,255,.8); }
+.disco-beams { position: absolute; top: 19px; left: -82%; width: 265%; aspect-ratio: 1; border-radius: 50%; background: repeating-conic-gradient(from 3deg, rgba(255,241,164,.32) 0deg 5deg, transparent 5deg 19deg); filter: blur(3px); opacity: .92; mix-blend-mode: screen; animation: disco-rays 7s linear infinite; }
+.disco-sphere { position: absolute; top: 27px; left: 50%; width: 78px; height: 78px; overflow: hidden; border: 2px solid rgba(255,255,255,.98); border-radius: 50%; background: repeating-linear-gradient(0deg, transparent 0 9px, rgba(18,48,73,.48) 9px 11px), repeating-linear-gradient(90deg, transparent 0 9px, rgba(18,48,73,.45) 9px 11px), radial-gradient(circle at 32% 24%, #fff 0%, #aff3ff 10%, #a887ff 35%, #ee8fd0 62%, #243858 100%); box-shadow: 0 0 18px #fff, 0 0 45px rgba(134,209,255,1), 0 0 78px rgba(252,130,207,.68); transform: translateX(-50%); animation: disco-spin 5.5s ease-in-out infinite alternate; }
 .disco-sphere::before, .disco-sphere::after { content: ""; position: absolute; inset: 8px 0; border: 1px solid rgba(255,255,255,.65); border-radius: 50%; }
 .disco-sphere::after { inset: 0 13px; }
-.disco-sphere i { position: absolute; top: 9px; left: 13px; width: 9px; height: 9px; border-radius: 50%; background: white; box-shadow: 18px 13px 0 #ffe796, 8px 30px 0 #ffb9e8, 25px 36px 0 #a9f4ff; animation: disco-glitter .9s ease-in-out infinite alternate; }
-.disco-glint { position: absolute; top: 30px; right: -1px; color: #fff8be; font-size: 1.2rem; text-shadow: 0 0 12px white, 0 0 24px #ff8cda; animation: disco-glint 1.1s ease-in-out infinite alternate; }
+.disco-sphere i { position: absolute; top: 12px; left: 16px; width: 11px; height: 11px; border-radius: 50%; background: white; box-shadow: 24px 15px 0 #ffe796, 10px 41px 0 #ffb9e8, 42px 47px 0 #a9f4ff, 35px 7px 0 white, -6px 28px 0 #fff8be; animation: disco-glitter .55s ease-in-out infinite alternate; }
+.disco-glint { position: absolute; color: #fff8be; text-shadow: 0 0 12px white, 0 0 24px #ff8cda, 0 0 42px #9defff; animation: disco-glint 1.1s ease-in-out infinite alternate; }
+.disco-glint-one { top: 42px; right: 4px; font-size: 1.8rem; }
+.disco-glint-two { top: 96px; left: 8px; color: #a9f4ff; font-size: 1.65rem; animation-delay: -.45s; }
+.disco-glint-three { top: 120px; right: 13px; color: #ffc5ea; font-size: 1.2rem; animation-delay: -.78s; }
 .hero #devilWings, .hero #devilHorns { display: none; }
 .hero.music-devil #devilWings, .hero.music-devil #devilHorns { display: inline; }
 .hero.music-devil #duck .duck-bob [fill="#F7C14B"] { fill: #D4475B !important; }
@@ -524,11 +539,13 @@ body.egg-open { overflow: hidden; }
   .egg-hearts span:nth-child(5) { --x: -135px; }
   .music-player { right: 12px; bottom: 12px; width: min(380px, calc(100vw - 24px)); gap: 8px; padding: 10px 12px; }
   .music-volume { width: 48px; flex-basis: 48px; }
-  .disco-set { top: -2px; right: -1%; width: 70px; height: 92px; }
-  .disco-thread { height: 22px; }
-  .disco-sphere { top: 16px; width: 47px; height: 47px; }
-  .disco-sphere i { top: 7px; left: 10px; box-shadow: 15px 10px 0 #ffe796, 7px 25px 0 #ffb9e8, 21px 29px 0 #a9f4ff; }
-  .disco-glint { top: 25px; right: -3px; }
+  .disco-set { top: -8px; right: -1%; width: 98px; height: 128px; }
+  .disco-thread { height: 29px; }
+  .disco-sphere { top: 21px; width: 64px; height: 64px; }
+  .disco-sphere i { top: 9px; left: 13px; box-shadow: 19px 13px 0 #ffe796, 8px 34px 0 #ffb9e8, 34px 38px 0 #a9f4ff, 28px 6px 0 white; }
+  .disco-glint-one { top: 34px; right: 1px; }
+  .disco-glint-two { top: 77px; left: 3px; }
+  .disco-glint-three { top: 96px; right: 6px; }
   .duckling-school { right: 0; left: 0; }
   .duckling { width: 65px; }
   .duckling-two { width: 70px; }

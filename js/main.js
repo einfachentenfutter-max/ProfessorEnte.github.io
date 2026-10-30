@@ -194,7 +194,7 @@
     var previous = $('#musicPrevious'), next = $('#musicNext');
     var hero = $('#hero');
     if (!audio || !button || !slider || !select || !title || !state || !player) return;
-    var musicScenes = ['music-galaxy', '', 'music-disco', 'music-ducklings', 'music-disco', 'music-devil'];
+    var musicScenes = ['music-galaxy', 'music-golden', 'music-disco', 'music-ducklings', 'music-disco', 'music-devil'];
 
     function selectedUrl() { return new URL(select.value, document.baseURI).href; }
     function updateUI() {
@@ -206,7 +206,7 @@
       player.classList.toggle('is-playing', playing);
       state.textContent = playing ? 'Spielt gerade' : 'Bereit zum Abspielen';
       if (hero) {
-        hero.classList.remove('music-galaxy', 'music-disco', 'music-ducklings', 'music-devil');
+        hero.classList.remove('music-galaxy', 'music-golden', 'music-disco', 'music-ducklings', 'music-devil');
         var scene = musicScenes[select.selectedIndex];
         if (scene) hero.classList.add(scene);
         hero.classList.toggle('music-playing', playing);

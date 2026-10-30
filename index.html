@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261030-music3">
+  <link rel="stylesheet" href="css/style.css?v=20261030-music5">
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}
   </script>
@@ -50,6 +50,7 @@
 
   <!-- HERO -->
   <section class="hero" id="hero">
+    <div class="galaxy-backdrop" id="galaxyBackdrop" aria-hidden="true"><span></span><span></span><span></span></div>
     <canvas class="ripple-canvas" id="rippleCanvas" aria-hidden="true"></canvas>
     <div class="container hero-grid">
       <div class="hero-text">
@@ -66,7 +67,6 @@
       </div>
 
       <div class="hero-duck" id="duckWrap">
-        <div class="galaxy-backdrop" id="galaxyBackdrop" aria-hidden="true"><span></span><span></span><span></span></div>
         <svg id="duck" class="egg-trigger" viewBox="0 0 420 400" role="button" tabindex="0" aria-label="ProfessorEnte-Ente, mehrfach aktivieren">
           <g class="ripples">
             <ellipse class="rp rp1" cx="210" cy="332" rx="150" ry="20"/>
@@ -120,7 +120,9 @@
           <span class="disco-thread"></span>
           <div class="disco-beams"></div>
           <div class="disco-sphere"><i></i></div>
-          <span class="disco-glint">✦</span>
+          <span class="disco-glint disco-glint-one">✦</span>
+          <span class="disco-glint disco-glint-two">✧</span>
+          <span class="disco-glint disco-glint-three">✦</span>
         </div>
         <div class="duckling-school" id="ducklingSchool" aria-hidden="true">
           <svg class="duckling duckling-one" viewBox="0 0 100 72">
@@ -378,6 +380,6 @@
 <script src="js/config.js?v=20261030-ecg1"></script>
 <script src="js/data.js?v=20261030-music2"></script>
 <script type="module" src="js/audi-montage.js?v=20261030-music2"></script>
-<script src="js/main.js?v=20261030-music3" defer></script>
+<script src="js/main.js?v=20261030-music5" defer></script>
 </body>
 </html>
