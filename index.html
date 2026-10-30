@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261030-fbx3">
+  <link rel="stylesheet" href="css/style.css?v=20261030-profile1">
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}
   </script>
@@ -40,6 +40,8 @@
     <a href="#scripts">Scripts</a>
     <a href="#dead-yard">Dead Yard</a>
     <a href="#projekte">Projekte</a>
+    <a href="#ekg">EKG</a>
+    <a href="#privates">Privates</a>
     <a href="#kontakt" class="nav-cta">Kontakt</a>
   </nav>
 </header>
@@ -181,6 +183,38 @@
     </div>
   </section>
 
+  <!-- EKG-SIMULATION -->
+  <section class="section rhythm-section" id="ekg">
+    <div class="container rhythm-grid">
+      <div class="rhythm-intro">
+        <p class="eyebrow">INTERAKTIVE SIMULATION</p>
+        <h2 class="h2 reveal-clip">EKG in Bewegung.</h2>
+        <p class="section-lead reveal">Die Kurve wechselt automatisch zwischen verschiedenen stilisierten Herzrhythmen – von ruhigem Sinusrhythmus bis zu unregelmäßigen Mustern.</p>
+        <ul class="rhythm-points reveal">
+          <li>Sinusrhythmus, Tachykardie und Bradykardie</li>
+          <li>Vorhofflimmern, Vorhofflattern und Kammerflimmern</li>
+          <li>Extrasystolen als weiteres Beispiel</li>
+        </ul>
+        <p class="rhythm-disclaimer reveal">Eine animierte Darstellung zu Unterhaltungs- und Lernzwecken, kein echtes EKG und keine medizinische Diagnose.</p>
+      </div>
+      <aside class="rhythm-widget rhythm-panel reveal" id="rhythmWidget" aria-label="EKG-Rhythmus-Simulation">
+        <div class="rhythm-widget-head">
+          <div class="rhythm-widget-title"><span class="rhythm-live-dot" aria-hidden="true"></span><span>Live-Simulation</span></div>
+          <div class="rhythm-widget-controls">
+            <button class="rhythm-control" id="rhythmPause" type="button" aria-label="EKG-Simulation pausieren" aria-pressed="false">Ⅱ</button>
+          </div>
+        </div>
+        <div class="rhythm-monitor">
+          <canvas id="rhythmCanvas" role="img" aria-label="Animierte, stilisierte EKG-Kurve"></canvas>
+        </div>
+        <div class="rhythm-widget-foot">
+          <strong id="rhythmName" aria-live="polite">Sinusrhythmus</strong>
+          <span id="rhythmRate">76 bpm</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
   <!-- WEITERE PROJEKTE -->
   <section class="section projects" id="projekte">
     <div class="container">
@@ -199,6 +233,32 @@
     </div>
   </section>
 
+  <!-- PRIVATES ÜBER MICH -->
+  <section class="section private-section" id="privates">
+    <div class="container">
+      <p class="eyebrow reveal">EIN BLICK HINTER DIE PROJEKTE</p>
+      <h2 class="h2 reveal-clip">Privates über mich.</h2>
+      <p class="section-lead reveal">Ein paar Dinge, die ich gern mache und an denen ich gerade arbeite.</p>
+      <div class="private-grid">
+        <article class="private-card reveal">
+          <span class="private-icon" aria-hidden="true">✦</span>
+          <h3>Was ich so mache</h3>
+          <p>Ich entwickle FiveM-Projekte und baue gern eigene Spiele, Webseiten, Mods und kleine Apps.</p>
+        </article>
+        <article class="private-card reveal">
+          <span class="private-icon" aria-hidden="true">⌁</span>
+          <h3>Woran ich tüftele</h3>
+          <p>Mich reizen interaktive Ideen, durchdachte Spielsysteme und Details, die ein Projekt lebendig machen – wie bei meinem Spiel Dead Yard.</p>
+        </article>
+        <article class="private-card reveal">
+          <span class="private-icon" aria-hidden="true">↗</span>
+          <h3>Was ich gerade lerne</h3>
+          <p>Ich beschäftige mich mit Car Development, MLOs sowie dem Skinning von Fahrzeugen und Kleidung.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <!-- KONTAKT -->
   <section class="section contact" id="kontakt">
     <div class="container contact-inner">
@@ -210,23 +270,6 @@
 
 </main>
 
-<aside class="rhythm-widget" id="rhythmWidget" aria-label="EKG-Rhythmus-Simulation">
-  <div class="rhythm-widget-head">
-    <div class="rhythm-widget-title"><span class="rhythm-live-dot" aria-hidden="true"></span><span>EKG-Simulation</span></div>
-    <div class="rhythm-widget-controls">
-      <button class="rhythm-control" id="rhythmPause" type="button" aria-label="EKG-Simulation pausieren" aria-pressed="false">Ⅱ</button>
-      <button class="rhythm-control" id="rhythmCollapse" type="button" aria-label="EKG-Feld einklappen" aria-expanded="true">−</button>
-    </div>
-  </div>
-  <div class="rhythm-monitor">
-    <canvas id="rhythmCanvas" role="img" aria-label="Animierte, stilisierte EKG-Kurve"></canvas>
-  </div>
-  <div class="rhythm-widget-foot">
-    <strong id="rhythmName" aria-live="polite">Sinusrhythmus</strong>
-    <span id="rhythmRate">76 bpm</span>
-  </div>
-</aside>
-
 <footer class="footer">
   <div class="container footer-inner">
     <p>© <span id="year">2026</span> ProfessorEnte (Jayden). Alle Rechte vorbehalten.</p>
@@ -235,8 +278,8 @@
 </footer>
 
 <script src="js/config.js?v=20261030-ecg1"></script>
-<script src="js/data.js?v=20261030-fbx3"></script>
-<script type="module" src="js/audi-montage.js?v=20261030-fbx3"></script>
-<script src="js/main.js?v=20261030-fbx3" defer></script>
+<script src="js/data.js?v=20261030-profile1"></script>
+<script type="module" src="js/audi-montage.js?v=20261030-profile1"></script>
+<script src="js/main.js?v=20261030-profile1" defer></script>
 </body>
 </html>

@@ -523,7 +523,7 @@
     var widget = $('#rhythmWidget'), canvas = $('#rhythmCanvas');
     if (!widget || !canvas || !canvas.getContext) return;
     var ctx = canvas.getContext('2d'), name = $('#rhythmName'), rate = $('#rhythmRate');
-    var pause = $('#rhythmPause'), collapse = $('#rhythmCollapse');
+    var pause = $('#rhythmPause');
     var modes = [
       { name: 'Sinusrhythmus', rate: '76 bpm', kind: 'sinus', bpm: 76, color: '#55D6B0' },
       { name: 'Sinustachykardie', rate: '146 bpm', kind: 'sinus', bpm: 146, color: '#F4B63A' },
@@ -534,7 +534,7 @@
       { name: 'Extrasystolen', rate: 'Musterbeispiel', kind: 'extra', color: '#D99CFF' }
     ];
     var width = 0, height = 0, ratio = 1, elapsed = 0, last = 0, modeIndex = 0;
-    var modeTime = 0, frameId = 0, playing = !reduce, collapsed = false;
+    var modeTime = 0, frameId = 0, playing = !reduce;
     var afIntervals = [.38, .76, .47, .59, .32, .83], afTotal = 0;
     afIntervals.forEach(function (v) { afTotal += v; });
 
@@ -602,13 +602,13 @@
       draw();
     }
     function frame(now) {
-      if (!playing || collapsed || document.hidden) { frameId = 0; return; }
+      if (!playing || document.hidden) { frameId = 0; return; }
       var dt = Math.min((now - last) / 1000, .05); last = now;
       elapsed += dt; modeTime += dt;
       if (modeTime >= 6.2) setMode((modeIndex + 1) % modes.length);
       draw(); frameId = requestAnimationFrame(frame);
     }
-    function start() { if (playing && !collapsed && !document.hidden && !frameId) { last = performance.now(); frameId = requestAnimationFrame(frame); } }
+    function start() { if (playing && !document.hidden && !frameId) { last = performance.now(); frameId = requestAnimationFrame(frame); } }
     function stop() { if (frameId) cancelAnimationFrame(frameId); frameId = 0; }
 
     setMode(0); resize();
@@ -623,13 +623,6 @@
       pause.setAttribute('aria-pressed', playing ? 'false' : 'true');
       pause.setAttribute('aria-label', playing ? 'EKG-Simulation pausieren' : 'EKG-Simulation fortsetzen');
       if (playing) start(); else stop();
-    });
-    collapse.addEventListener('click', function () {
-      collapsed = !collapsed; widget.classList.toggle('collapsed', collapsed);
-      collapse.textContent = collapsed ? '+' : '−';
-      collapse.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-      collapse.setAttribute('aria-label', collapsed ? 'EKG-Feld ausklappen' : 'EKG-Feld einklappen');
-      if (collapsed) stop(); else { resize(); start(); }
     });
     document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
   }
