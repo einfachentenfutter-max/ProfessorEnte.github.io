@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261030-music1">
+  <link rel="stylesheet" href="css/style.css?v=20261030-music2">
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}
   </script>
@@ -306,19 +306,35 @@
 </div>
 
 <aside class="music-player" id="musicPlayer" aria-label="Hintergrundmusik">
-  <div class="music-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-  <div class="music-copy">
-    <strong>Ente-Ambient</strong>
-    <span id="musicState" aria-live="polite">Ruhige Musik · bereit</span>
+  <div class="music-top">
+    <div class="music-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="music-copy">
+      <strong id="musicTitle">Musik auswählen</strong>
+      <span id="musicState" aria-live="polite">Playlist · bereit</span>
+    </div>
+    <label class="sr-only" for="musicVolume">Musiklautstärke</label>
+    <input class="music-volume" id="musicVolume" type="range" min="0" max="100" value="70" aria-label="Musiklautstärke">
+    <button class="music-toggle" id="musicToggle" type="button" aria-label="Musik starten" aria-pressed="false">▶</button>
   </div>
-  <label class="sr-only" for="musicVolume">Musiklautstärke</label>
-  <input class="music-volume" id="musicVolume" type="range" min="0" max="100" value="38" aria-label="Musiklautstärke">
-  <button class="music-toggle" id="musicToggle" type="button" aria-label="Musik starten" aria-pressed="false">▶</button>
+  <div class="music-select-row">
+    <button class="music-skip" id="musicPrevious" type="button" aria-label="Vorheriger Titel">|◀</button>
+    <label class="sr-only" for="musicTrack">Titel auswählen</label>
+    <select class="music-select" id="musicTrack" aria-label="Titel auswählen">
+      <option value="assets/music/interstellar-hans-zimmer.mp3">Interstellar — Hans Zimmer</option>
+      <option value="assets/music/golden-brown.mp3">Golden Brown</option>
+      <option value="assets/music/rihanna-s-and-m.mp3">S&amp;M — Rihanna</option>
+      <option value="assets/music/alle-meine-entchen-variationen.mp3">Alle meine Entchen — Variationen</option>
+      <option value="assets/music/rihanna-disturbia.mp3">Disturbia — Rihanna</option>
+      <option value="assets/music/me-and-the-devil-lucila.mp3">Me and the Devil — Lucila</option>
+    </select>
+    <button class="music-skip" id="musicNext" type="button" aria-label="Nächster Titel">▶|</button>
+  </div>
+  <audio id="musicAudio" preload="none"></audio>
 </aside>
 
 <script src="js/config.js?v=20261030-ecg1"></script>
-<script src="js/data.js?v=20261030-profile1"></script>
-<script type="module" src="js/audi-montage.js?v=20261030-profile1"></script>
-<script src="js/main.js?v=20261030-music1" defer></script>
+<script src="js/data.js?v=20261030-music2"></script>
+<script type="module" src="js/audi-montage.js?v=20261030-music2"></script>
+<script src="js/main.js?v=20261030-music2" defer></script>
 </body>
 </html>

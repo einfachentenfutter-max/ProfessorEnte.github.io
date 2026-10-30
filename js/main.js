@@ -187,98 +187,62 @@
     });
   }
 
-  /* ───────────── Sanfte, selbst erzeugte Ambient-Musik ───────────── */
+  /* ───────────── MP3-Playlist ───────────── */
   function initMusic() {
-    var button = $('#musicToggle'), slider = $('#musicVolume'), state = $('#musicState'), player = $('#musicPlayer');
-    if (!button || !slider || !state || !player) return;
-    var AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) {
-      button.disabled = true;
-      button.setAttribute('aria-label', 'Musik wird von diesem Browser nicht unterstützt');
-      state.textContent = 'Audio nicht verfügbar';
-      return;
-    }
+    var audio = $('#musicAudio'), button = $('#musicToggle'), slider = $('#musicVolume');
+    var select = $('#musicTrack'), title = $('#musicTitle'), state = $('#musicState'), player = $('#musicPlayer');
+    var previous = $('#musicPrevious'), next = $('#musicNext');
+    if (!audio || !button || !slider || !select || !title || !state || !player) return;
 
-    var context = null, master = null, playing = false, timer = 0, step = 0;
-    var volume = Number(slider.value) / 100;
-    var chords = [
-      [48, 55, 59, 64], [45, 52, 55, 60], [41, 48, 52, 57], [43, 50, 55, 59]
-    ];
-    var melody = [72, 76, 79, 76, 74, 72, 67, 69, 72, 76, 81, 79, 76, 72, 69, 67,
-      69, 72, 76, 72, 74, 76, 79, 76, 67, 71, 74, 71, 69, 67, 62, 64];
-
-    function frequency(note) { return 440 * Math.pow(2, (note - 69) / 12); }
-    function ensureAudio() {
-      if (context) return;
-      context = new AudioContextClass();
-      master = context.createGain();
-      master.gain.value = 0;
-      master.connect(context.destination);
-    }
-    function playChord(notes, at) {
-      notes.forEach(function (note, index) {
-        var oscillator = context.createOscillator(), envelope = context.createGain();
-        var pan = context.createStereoPanner ? context.createStereoPanner() : null;
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(frequency(note), at);
-        envelope.gain.setValueAtTime(.0001, at);
-        envelope.gain.exponentialRampToValueAtTime(index === 0 ? .035 : .019, at + 1.15);
-        envelope.gain.setValueAtTime(index === 0 ? .035 : .019, at + 4.9);
-        envelope.gain.exponentialRampToValueAtTime(.0001, at + 6.35);
-        oscillator.connect(envelope);
-        if (pan) { pan.pan.value = (index - 1.5) * .22; envelope.connect(pan); pan.connect(master); }
-        else envelope.connect(master);
-        oscillator.start(at); oscillator.stop(at + 6.4);
-      });
-    }
-    function playNote(note, at) {
-      var oscillator = context.createOscillator(), overtone = context.createOscillator(), envelope = context.createGain();
-      oscillator.type = 'sine'; overtone.type = 'sine';
-      oscillator.frequency.setValueAtTime(frequency(note), at);
-      overtone.frequency.setValueAtTime(frequency(note) * 2, at);
-      envelope.gain.setValueAtTime(.0001, at);
-      envelope.gain.exponentialRampToValueAtTime(.052, at + .035);
-      envelope.gain.exponentialRampToValueAtTime(.0001, at + 1.75);
-      oscillator.connect(envelope); overtone.connect(envelope); envelope.connect(master);
-      oscillator.start(at); overtone.start(at);
-      oscillator.stop(at + 1.8); overtone.stop(at + 1.8);
-    }
-    function beat() {
-      if (!playing || document.hidden) return;
-      var at = context.currentTime + .08;
-      if (step % 8 === 0) playChord(chords[Math.floor(step / 8) % chords.length], at);
-      playNote(melody[step % melody.length], at + .08);
-      step++;
-      timer = window.setTimeout(beat, 820);
-    }
+    function selectedUrl() { return new URL(select.value, document.baseURI).href; }
     function updateUI() {
+      var playing = !audio.paused && !audio.ended;
+      title.textContent = select.options[select.selectedIndex].text;
       button.textContent = playing ? 'Ⅱ' : '▶';
       button.setAttribute('aria-pressed', playing ? 'true' : 'false');
       button.setAttribute('aria-label', playing ? 'Musik pausieren' : 'Musik starten');
       player.classList.toggle('is-playing', playing);
-      state.textContent = playing ? 'Ambient läuft' : 'Ruhige Musik · bereit';
+      state.textContent = playing ? 'Spielt gerade' : 'Bereit zum Abspielen';
     }
-    function stop() {
-      if (!playing) return;
-      playing = false;
-      window.clearTimeout(timer);
-      if (context && master) master.gain.setTargetAtTime(0, context.currentTime, .12);
-      updateUI();
+    function loadSelected() {
+      var url = selectedUrl();
+      if (audio.src !== url) { audio.src = url; audio.load(); }
     }
+    function playSelected() {
+      loadSelected();
+      audio.volume = Number(slider.value) / 100;
+      audio.play().catch(function () { state.textContent = 'Dieser Titel konnte nicht gestartet werden'; });
+    }
+    function moveTrack(direction, autoplay) {
+      select.selectedIndex = (select.selectedIndex + direction + select.options.length) % select.options.length;
+      audio.pause();
+      loadSelected();
+      if (autoplay) playSelected();
+      else updateUI();
+    }
+
     button.addEventListener('click', function () {
-      if (playing) { stop(); return; }
-      ensureAudio();
-      context.resume().then(function () {
-        playing = true; step = 0;
-        master.gain.setTargetAtTime(volume, context.currentTime, .3);
-        updateUI(); beat();
-      }).catch(function () { state.textContent = 'Audio konnte nicht gestartet werden'; });
+      if (!audio.paused && !audio.ended) audio.pause();
+      else playSelected();
     });
-    slider.addEventListener('input', function () {
-      volume = Number(slider.value) / 100;
-      if (playing && master) master.gain.setTargetAtTime(volume, context.currentTime, .08);
+    select.addEventListener('change', function () {
+      var autoplay = !audio.paused && !audio.ended;
+      audio.pause(); loadSelected();
+      if (autoplay) playSelected();
+      else updateUI();
     });
-    document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); });
+    if (previous) previous.addEventListener('click', function () {
+      if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+      moveTrack(-1, !audio.paused && !audio.ended);
+    });
+    if (next) next.addEventListener('click', function () { moveTrack(1, !audio.paused && !audio.ended); });
+    slider.addEventListener('input', function () { audio.volume = Number(slider.value) / 100; });
+    audio.addEventListener('play', updateUI);
+    audio.addEventListener('pause', updateUI);
+    audio.addEventListener('ended', function () { moveTrack(1, true); });
+    audio.addEventListener('error', function () { state.textContent = 'Datei konnte nicht geladen werden'; });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) audio.pause(); });
+    updateUI();
   }
 
   /* ───────────── Fortschritt und Navigation ───────────── */
