@@ -297,7 +297,9 @@ body[data-theme="duck"] .duck-rain { visibility: visible; }
 .server-label { display: inline-block; margin-bottom: 12px; color: var(--duck); font-size: .76rem; font-weight: 700; letter-spacing: .12em; }
 .server-card h3 { margin: 0 0 9px; font-family: var(--font-display); font-size: clamp(1.7rem, 3vw, 2.5rem); letter-spacing: -.03em; }
 .server-card p { margin: 0; color: rgba(246,250,248,.72); }
+.server-card-actions { display: flex; flex: 0 0 auto; flex-wrap: wrap; gap: 12px; }
 .server-card .btn { flex: 0 0 auto; text-decoration: none; }
+.server-card .btn-ghost { border-color: rgba(246,250,248,.34); color: var(--paper); background: rgba(246,250,248,.04); }
 
 /* ---------- Dead Yard ---------- */
 .yard { background: var(--pond-900); color: var(--paper); overflow: hidden; }
