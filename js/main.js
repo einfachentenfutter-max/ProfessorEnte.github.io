@@ -142,6 +142,51 @@
     }, { passive: true });
   }
 
+  /* ───────────── Verstecktes Elena-Easter-Egg ───────────── */
+  function initEasterEgg() {
+    var duck = $('#duck'), egg = $('#elenaEgg');
+    if (!duck || !egg) return;
+    var closeButton = $('.egg-close', egg), count = 0, lastTap = 0, resetTimer = 0, closeTimer = 0;
+
+    function open() {
+      clearTimeout(closeTimer);
+      egg.hidden = false;
+      egg.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('egg-open');
+      requestAnimationFrame(function () { egg.classList.add('is-open'); });
+      if (closeButton) closeButton.focus();
+      count = 0;
+    }
+    function close() {
+      egg.classList.remove('is-open');
+      egg.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('egg-open');
+      duck.focus();
+      closeTimer = setTimeout(function () { egg.hidden = true; }, 500);
+    }
+    function tap() {
+      var now = Date.now();
+      count = now - lastTap < 2200 ? count + 1 : 1;
+      lastTap = now;
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(function () { count = 0; }, 2200);
+      duck.classList.remove('egg-tap');
+      void duck.getBoundingClientRect();
+      duck.classList.add('egg-tap');
+      setTimeout(function () { duck.classList.remove('egg-tap'); }, 420);
+      if (count >= 5) open();
+    }
+
+    duck.addEventListener('click', tap);
+    duck.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); tap(); }
+    });
+    $$('[data-egg-close]', egg).forEach(function (el) { el.addEventListener('click', close); });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !egg.hidden) close();
+    });
+  }
+
   /* ───────────── Fortschritt und Navigation ───────────── */
   function initProgress() {
     var bar = $('#progressBar'), duck = $('#progressDuck');
@@ -643,6 +688,7 @@
     initTitle();
     initRipples();
     initEyes();
+    initEasterEgg();
     initProgress();
     initNav();
     initRoles();

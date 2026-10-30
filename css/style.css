@@ -333,6 +333,36 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .private-card h3 { margin: 0 0 10px; font-family: var(--font-display); font-size: 1.32rem; }
 .private-card p { margin: 0; color: var(--slate); }
 
+/* ---------- Verstecktes Elena-Easter-Egg ---------- */
+body.egg-open { overflow: hidden; }
+.egg-trigger { cursor: pointer; }
+.egg-trigger:focus-visible { outline: 4px solid var(--bill); outline-offset: 6px; border-radius: 28px; }
+.egg-trigger.egg-tap { animation: egg-duck-tap .42s var(--ease); }
+.elena-egg { position: fixed; z-index: 120; inset: 0; display: grid; place-items: center; padding: 24px; opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility .45s; }
+.elena-egg[hidden] { display: none !important; }
+.elena-egg.is-open { opacity: 1; visibility: visible; }
+.egg-backdrop { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(25,37,50,.64), rgba(5,13,21,.88)); -webkit-backdrop-filter: blur(13px); backdrop-filter: blur(13px); }
+.egg-card { position: relative; isolation: isolate; display: flex; width: min(620px, 100%); min-height: 370px; flex-direction: column; align-items: center; justify-content: center; overflow: visible; padding: 66px 28px 48px; border: 1px solid rgba(255,255,255,.64); border-radius: 38px; background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(255,241,248,.95) 50%, rgba(255,249,221,.96)); box-shadow: 0 40px 120px rgba(0,0,0,.35), 0 0 80px rgba(255,181,209,.24); text-align: center; transform: translateY(36px) scale(.82) rotate(-3deg); transition: transform .8s cubic-bezier(.16,1.25,.35,1); }
+.is-open .egg-card { transform: none; }
+.egg-card::before { content: ""; position: absolute; z-index: -1; inset: -18%; border-radius: 50%; background: conic-gradient(from 0deg, transparent, rgba(255,150,194,.24), transparent 30%, rgba(255,222,125,.32), transparent 60%); filter: blur(14px); animation: egg-aura 12s linear infinite; }
+.egg-close { position: absolute; z-index: 3; top: 16px; right: 18px; display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(16,51,58,.1); border-radius: 50%; background: rgba(255,255,255,.78); color: var(--pond-900); font-size: 1.7rem; line-height: 1; transition: transform .25s var(--ease), background .25s; }
+.egg-close:hover { transform: rotate(90deg) scale(1.08); background: white; }
+.egg-kicker { z-index: 1; margin: 0 0 12px; color: #9D5979; font-size: .76rem; font-weight: 800; letter-spacing: .2em; }
+.egg-message { z-index: 1; margin: 0; background: linear-gradient(100deg, #E4572E 0%, #C84487 44%, #9052C8 72%, #E4572E 100%); background-size: 220% auto; background-clip: text; color: transparent; font-family: var(--font-display); font-size: clamp(3.2rem, 10vw, 6.5rem); font-weight: 800; letter-spacing: -.06em; line-height: 1.15; filter: drop-shadow(0 9px 20px rgba(197,68,135,.18)); animation: egg-shimmer 4s ease-in-out infinite, egg-pop .95s .15s cubic-bezier(.2,1.7,.4,1) both; }
+.egg-note { z-index: 1; margin: 12px 0 0; color: #765363; font-size: 1.05rem; }
+.egg-hearts { position: absolute; inset: 0; pointer-events: none; }
+.egg-hearts span { position: absolute; top: 48%; left: 50%; font-size: clamp(1.15rem, 3vw, 2rem); opacity: 0; animation: egg-heart-float 3.8s ease-in-out infinite; }
+.egg-hearts span:nth-child(1) { --x: -230px; --y: -90px; animation-delay: -.3s; }
+.egg-hearts span:nth-child(2) { --x: -155px; --y: 120px; animation-delay: -1.2s; }
+.egg-hearts span:nth-child(3) { --x: 185px; --y: -115px; animation-delay: -2.1s; }
+.egg-hearts span:nth-child(4) { --x: 235px; --y: 55px; animation-delay: -.8s; }
+.egg-hearts span:nth-child(5) { --x: -260px; --y: 28px; animation-delay: -2.8s; }
+.egg-hearts span:nth-child(6) { --x: 100px; --y: 130px; animation-delay: -1.7s; }
+.egg-hearts span:nth-child(7) { --x: 0px; --y: -145px; animation-delay: -3.1s; }
+.egg-orbit { position: absolute; z-index: -1; width: 72%; aspect-ratio: 1; border: 1px solid rgba(206,116,161,.17); border-radius: 50%; pointer-events: none; }
+.egg-orbit-one { animation: egg-orbit 22s linear infinite; }
+.egg-orbit-two { width: 92%; border-color: rgba(244,182,58,.16); animation: egg-orbit 30s linear infinite reverse; }
+
 /* ---------- Reveals ---------- */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
 .reveal.in { opacity: 1; transform: none; }
@@ -362,6 +392,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes blink { 50% { opacity: .2; } }
 @keyframes brush { from { transform: rotate(-8deg); } to { transform: rotate(10deg) translateX(4px); } }
+@keyframes egg-duck-tap { 25% { transform: rotate(-3deg) scale(1.035); } 55% { transform: rotate(3deg) scale(1.06); } 100% { transform: none; } }
+@keyframes egg-aura { to { transform: rotate(360deg); } }
+@keyframes egg-shimmer { 0%, 100% { background-position: 0% center; } 50% { background-position: 100% center; } }
+@keyframes egg-pop { 0% { transform: scale(.4) rotate(-8deg); opacity: 0; } 68% { transform: scale(1.13) rotate(3deg); opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes egg-heart-float { 0%, 100% { transform: translate(calc(var(--x) - 50%), calc(var(--y) + 12px)) scale(.72) rotate(-10deg); opacity: .05; } 45% { transform: translate(calc(var(--x) - 50%), var(--y)) scale(1.12) rotate(10deg); opacity: .95; } }
+@keyframes egg-orbit { to { transform: rotate(360deg) scaleY(.72); } }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 980px) {
@@ -403,6 +439,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .script-grid { grid-template-columns: 1fr; }
   .script-card.featured { grid-column: auto; }
   .facts div { grid-template-columns: 1fr; gap: 2px; }
+  .egg-card { min-height: 310px; padding-inline: 18px; border-radius: 30px; }
+  .egg-hearts span:nth-child(1) { --x: -130px; }
+  .egg-hearts span:nth-child(2) { --x: -110px; }
+  .egg-hearts span:nth-child(3) { --x: 105px; }
+  .egg-hearts span:nth-child(4) { --x: 130px; }
+  .egg-hearts span:nth-child(5) { --x: -135px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -413,4 +455,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .marquee-track { animation: none; }
   .audi-kicker i { animation: none; }
   .audi-spinner { animation: none; }
+  .egg-card::before, .egg-orbit, .egg-hearts span { animation: none; }
+  .egg-hearts span { opacity: .4; }
 }
