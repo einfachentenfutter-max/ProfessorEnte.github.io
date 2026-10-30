@@ -208,7 +208,7 @@
       if (hero) {
         hero.classList.remove('music-galaxy', 'music-golden', 'music-disco', 'music-ducklings', 'music-devil', 'music-video');
         var scene = musicScenes[select.selectedIndex];
-        if (scene) hero.classList.add(scene);
+        if (scene && (scene !== 'music-video' || playing)) hero.classList.add(scene);
         hero.classList.toggle('music-playing', playing);
         if (sceneVideo) {
           if (playing && select.selectedIndex === 6) {
