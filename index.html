@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261030-privatepic1">
+  <link rel="stylesheet" href="css/style.css?v=20261030-strausberg2">
   <script>document.documentElement.classList.add('has-site-loader');</script>
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}
@@ -50,6 +50,7 @@
     <a href="#naechstes">Nächstes</a>
     <a href="#ekg">EKG</a>
     <a href="#privates">Privates</a>
+    <a href="#karte">Karte</a>
     <a href="#kontakt" class="nav-cta">Kontakt</a>
   </nav>
 </header>
@@ -70,6 +71,7 @@
   </section>
 </div>
 <div class="duck-rain" id="duckRain" aria-hidden="true"></div>
+<div class="season-effects" id="seasonEffects" aria-hidden="true"></div>
 
 <main id="top">
 
@@ -77,6 +79,7 @@
   <section class="hero" id="hero">
     <div class="galaxy-backdrop" id="galaxyBackdrop" aria-hidden="true"><span></span><span></span><span></span></div>
     <canvas class="ripple-canvas" id="rippleCanvas" aria-hidden="true"></canvas>
+    <div class="time-glow" aria-hidden="true"></div>
     <div class="container hero-grid">
       <div class="hero-text">
         <p class="hero-aka" id="heroAka">Jayden, online bekannt als</p>
@@ -89,6 +92,7 @@
         <ul class="hero-roles" id="heroRoles" aria-label="Rollen">
           <li>Support</li><li>Management</li><li>Development</li>
         </ul>
+        <p class="atmosphere-badge" id="atmosphereBadge" aria-live="polite"></p>
       </div>
 
       <div class="hero-duck" id="duckWrap">
@@ -197,6 +201,7 @@
         </dl>
       </div>
     </div>
+    <button class="duck-collectible duck-spot-one" type="button" data-duck-id="1" aria-label="Versteckte Ente einsammeln">🐤</button>
   </section>
 
   <!-- ROLLEN -->
@@ -209,6 +214,7 @@
         <div class="role-panel" id="rolePanel" role="tabpanel" aria-live="polite"></div>
       </div>
     </div>
+    <button class="duck-collectible duck-spot-two" type="button" data-duck-id="2" aria-label="Versteckte Ente einsammeln">🐥</button>
   </section>
 
   <!-- SCRIPTS -->
@@ -223,6 +229,7 @@
       </div>
       <div class="script-grid" id="scriptGrid"></div>
     </div>
+    <button class="duck-collectible duck-spot-three" type="button" data-duck-id="3" aria-label="Versteckte Ente einsammeln">🦆</button>
   </section>
 
   <!-- AKTUELLER FIVEM-SERVER -->
@@ -240,9 +247,11 @@
         <div class="server-card-actions">
           <a class="btn btn-primary" href="https://discord.gg/hamburg-roleplay" target="_blank" rel="noopener">Zum Discord ↗</a>
           <a class="btn btn-ghost" href="https://hamburgroleplay.de/index.html" target="_blank" rel="noopener">Hamburg Roleplay Website ↗</a>
+          <a class="btn btn-ghost" href="https://servers.fivem.net/servers/detail/rmap6k8" target="_blank" rel="noopener">FiveM-Serverstatus ↗</a>
         </div>
       </div>
     </div>
+    <button class="duck-collectible duck-spot-four" type="button" data-duck-id="4" aria-label="Versteckte Ente einsammeln">🐣</button>
   </section>
 
   <!-- MARQUEE -->
@@ -272,6 +281,7 @@
         <p class="yard-hint" id="yardHint">Mini-Demo: Zielen mit der Maus, klicken oder tippen zum Schießen.</p>
       </div>
     </div>
+    <button class="duck-collectible duck-spot-five" type="button" data-duck-id="5" aria-label="Versteckte Ente einsammeln">🐤</button>
   </section>
 
   <!-- EKG-SIMULATION -->
@@ -304,6 +314,7 @@
         </div>
       </aside>
     </div>
+    <button class="duck-collectible duck-spot-six" type="button" data-duck-id="6" aria-label="Versteckte Ente einsammeln">🐥</button>
   </section>
 
   <!-- WEITERE PROJEKTE -->
@@ -311,6 +322,12 @@
     <div class="container">
       <h2 class="h2 reveal-clip">Weitere Projekte.</h2>
       <p class="section-lead reveal">Neben FiveM baue ich Spiele, Mods, Webseiten und Apps. Öffne die Details eines Projekts, um mehr darüber zu erfahren. <a class="project-demo-link" href="https://professorente.itch.io/dead-yard" target="_blank" rel="noopener">Dead Yard direkt spielen ↗</a></p>
+      <div class="leaderboard-panel reveal">
+        <div class="leaderboard-heading"><div><p class="eyebrow">DEINE STIMME ZÄHLT</p><h3>Community-Rangliste</h3><p>Welches Projekt gefällt dir am besten? Stimme einmal pro Browser ab.</p></div><span class="leaderboard-trophy" aria-hidden="true">🏆</span></div>
+        <ol class="leaderboard-list" id="projectLeaderboard" aria-label="Rangliste der Projekte"><li class="leaderboard-loading">Rangliste wird geladen …</li></ol>
+        <p class="leaderboard-status" id="leaderboardStatus" aria-live="polite">Die Stimmen werden geladen.</p>
+        <p class="leaderboard-note">Spaßabstimmung über einen öffentlichen Zähldienst; pro Browser ist eine Stimme vorgesehen.</p>
+      </div>
       <div class="project-tools reveal">
         <label class="project-search-wrap" for="projectSearch"><span aria-hidden="true">⌕</span><input id="projectSearch" type="search" placeholder="Projekte durchsuchen …" autocomplete="off"><span class="sr-only">Projekte durchsuchen</span></label>
         <div class="project-filters" id="projectFilters" role="group" aria-label="Projekte nach Bereich filtern"></div>
@@ -318,6 +335,7 @@
       <p class="project-result-count" id="projectResultCount" aria-live="polite"></p>
       <ul class="project-list" id="projectList"></ul>
     </div>
+    <button class="duck-collectible duck-spot-seven" type="button" data-duck-id="7" aria-label="Versteckte Ente einsammeln">🦆</button>
   </section>
 
   <!-- LERNE GERADE -->
@@ -393,6 +411,30 @@
           <p>Ich möchte hilfsbereit sein, selbst etwas bewegen, Verantwortung übernehmen und mich ständig weiterentwickeln. Ich habe viele Interessen und große Ziele und möchte aus meinen Möglichkeiten etwas machen – Stillstand war noch nie besonders spannend. 💻🚨</p>
         </article>
       </div>
+      <button class="duck-collectible duck-spot-eight" type="button" data-duck-id="8" aria-label="Versteckte Ente einsammeln">🐣</button>
+    </div>
+  </section>
+
+  <!-- INTERAKTIVE STRAUSBERG-KARTE -->
+  <section class="section town-map-section" id="karte">
+    <div class="container">
+      <p class="eyebrow reveal">MEINE REGION</p>
+      <h2 class="h2 reveal-clip">Rund um Strausberg.</h2>
+      <p class="section-lead reveal">Orte aus der Gegend auf einer interaktiven Karte. Wähle einen Pin oder einen Eintrag, um mehr zu sehen.</p>
+      <div class="town-map-layout reveal">
+        <div class="town-map-frame"><div id="strausbergMap" class="town-map" role="application" aria-label="Interaktive Karte mit Orten rund um Strausberg"></div><p id="mapStatus" class="map-status" role="status">Karte wird geladen …</p></div>
+        <div class="map-place-panel"><h3>Orte auf der Karte</h3><ul id="mapPlaces" class="map-place-list"></ul><p class="map-credit">Kartendaten © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap-Mitwirkende</a></p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENTEN-SAMMELSPIEL -->
+  <section class="section duck-hunt-section" id="entenjagd">
+    <div class="container">
+      <div class="duck-hunt-card reveal">
+        <div><p class="eyebrow">KLEINES SEITENABENTEUER</p><h2 class="h2">Entenjagd!</h2><p>Auf der Website haben sich kleine Enten versteckt. Finde sie alle und sammle sie ein.</p></div>
+        <div class="duck-hunt-progress"><span class="hunt-big-duck" aria-hidden="true">🐣</span><strong id="duckHuntProgress">0 / 8</strong><span>gefunden</span><p id="duckHuntWin" class="duck-hunt-win" hidden>Alle Enten gefunden! Du bist ein echter Enten-Detektiv. 🏅</p></div>
+      </div>
     </div>
   </section>
 
@@ -457,8 +499,8 @@
 <button class="scroll-top" id="scrollTop" type="button" aria-label="Zurück nach oben" title="Zurück nach oben"><span aria-hidden="true">↑</span><span class="scroll-top-duck" aria-hidden="true">🐤</span></button>
 
 <script src="js/config.js?v=20261030-ecg1"></script>
-<script src="js/data.js?v=20261030-funpack1"></script>
+<script src="js/data.js?v=20261030-strausberg2"></script>
 <script type="module" src="js/audi-montage.js?v=20261030-music2"></script>
-<script src="js/main.js?v=20261030-funpack1" defer></script>
+<script src="js/main.js?v=20261030-strausberg2" defer></script>
 </body>
 </html>

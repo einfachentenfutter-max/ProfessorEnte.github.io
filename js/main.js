@@ -372,7 +372,7 @@
       } catch (_) {}
     }
     document.addEventListener('click', function (event) {
-      var target = event.target.closest && event.target.closest('#themeToggle,[data-theme-choice],#duck,.card-toggle,.project-details summary,#scrollTop');
+      var target = event.target.closest && event.target.closest('#themeToggle,[data-theme-choice],#duck,.card-toggle,.project-details summary,#scrollTop,.duck-collectible,.leaderboard-vote,.map-place-button');
       if (!target) return;
       play(target.id === 'duck' ? 'duck' : 'ui');
     });
@@ -624,6 +624,237 @@
     if (search) search.addEventListener('input', applyProjectFilters);
     applyProjectFilters();
     if (window.PE_AUDI_MONTAGE) window.PE_AUDI_MONTAGE.init();
+  }
+
+  function initProjectLeaderboard() {
+    var list = $('#projectLeaderboard'), status = $('#leaderboardStatus');
+    if (!list || !D.projects || !window.fetch) return;
+    var endpoint = 'https://countapi.mileshilliard.com/api/v1/';
+    var voteKey = 'professorente-project-vote';
+    var votedProject = '';
+    try { votedProject = localStorage.getItem(voteKey) || ''; } catch (_) {}
+    var entries = D.projects.map(function (project, index) {
+      var slug = normalizedProjectName(project.slug || project.title).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      return { project: project, index: index, key: 'professorente-vote-' + slug, votes: 0 };
+    });
+
+    function normalizedProjectName(name) {
+      return String(name || '').toLocaleLowerCase('de').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+    function getCount(entry) {
+      return fetch(endpoint + 'get/' + entry.key, { cache: 'no-store', mode: 'cors' }).then(function (response) {
+        if (response.status === 404) return { value: 0 };
+        if (!response.ok) throw new Error('Stimmen konnten nicht geladen werden');
+        return response.json();
+      }).then(function (data) { entry.votes = Number(data.value) || 0; });
+    }
+    function render() {
+      entries.sort(function (a, b) { return b.votes - a.votes || a.index - b.index; });
+      list.replaceChildren();
+      entries.forEach(function (entry, index) {
+        var row = document.createElement('li');
+        row.className = 'leaderboard-row';
+        var rank = document.createElement('span'); rank.className = 'leaderboard-rank'; rank.textContent = String(index + 1).padStart(2, '0');
+        var copy = document.createElement('span'); copy.className = 'leaderboard-project';
+        var title = document.createElement('strong'); title.textContent = entry.project.title;
+        var category = document.createElement('small'); category.textContent = entry.project.category || 'Projekt';
+        copy.append(title, category);
+        var votes = document.createElement('strong'); votes.className = 'leaderboard-votes'; votes.textContent = entry.votes.toLocaleString('de-DE'); votes.setAttribute('aria-label', entry.votes + ' Stimmen');
+        var button = document.createElement('button'); button.type = 'button'; button.className = 'leaderboard-vote';
+        button.textContent = votedProject === entry.key ? 'Deine Stimme ✓' : 'Abstimmen';
+        button.disabled = Boolean(votedProject);
+        button.setAttribute('aria-label', 'Für ' + entry.project.title + ' abstimmen');
+        button.addEventListener('click', function () {
+          if (votedProject) return;
+          button.disabled = true;
+          if (status) status.textContent = 'Deine Stimme wird gespeichert …';
+          fetch(endpoint + 'hit/' + entry.key, { cache: 'no-store', mode: 'cors' }).then(function (response) {
+            if (!response.ok) throw new Error('Stimme konnte nicht gespeichert werden');
+            return response.json();
+          }).then(function (data) {
+            entry.votes = Number(data.value) || entry.votes + 1;
+            votedProject = entry.key;
+            try { localStorage.setItem(voteKey, votedProject); } catch (_) {}
+            if (status) status.textContent = 'Danke für deine Stimme! Du kannst pro Browser einmal abstimmen.';
+            render();
+          }).catch(function () {
+            button.disabled = false;
+            if (status) status.textContent = 'Abstimmen klappt gerade nicht. Versuch es später noch einmal.';
+          });
+        });
+        row.append(rank, copy, votes, button);
+        list.appendChild(row);
+      });
+    }
+
+    Promise.all(entries.map(getCount)).then(function () {
+      render();
+      if (status) status.textContent = votedProject ? 'Danke fürs Mitmachen! Pro Browser ist eine Stimme möglich.' : 'Stimme für dein Lieblingsprojekt ab.';
+    }).catch(function () {
+      render();
+      if (status) status.textContent = 'Die Rangliste ist gerade nicht erreichbar. Du kannst es später erneut versuchen.';
+      $$('.leaderboard-vote', list).forEach(function (button) { button.disabled = true; });
+    });
+  }
+
+  function initStrausbergMap() {
+    var section = $('#karte'), mapElement = $('#strausbergMap'), status = $('#mapStatus'), placeList = $('#mapPlaces');
+    if (!section || !mapElement || !D.mapPoints || !D.mapPoints.length) return;
+    var mapStarted = false;
+    var map = null, markers = Object.create(null);
+
+    function osmLink(place) {
+      return 'https://www.openstreetmap.org/?mlat=' + encodeURIComponent(place.lat) + '&mlon=' + encodeURIComponent(place.lon) + '#map=17/' + encodeURIComponent(place.lat) + '/' + encodeURIComponent(place.lon);
+    }
+    D.mapPoints.forEach(function (place) {
+      var item = document.createElement('li');
+      var button = document.createElement('button'); button.type = 'button'; button.className = 'map-place-button';
+      var symbol = document.createElement('span'); symbol.className = 'map-place-icon'; symbol.setAttribute('aria-hidden', 'true'); symbol.textContent = place.icon || '📍';
+      var copy = document.createElement('span'); copy.className = 'map-place-copy';
+      var name = document.createElement('strong'); name.textContent = place.name;
+      var type = document.createElement('small'); type.textContent = place.type;
+      copy.append(name, type); button.append(symbol, copy);
+      button.addEventListener('click', function () {
+        if (map && markers[place.name]) { map.setView([place.lat, place.lon], 15, { animate: !reduce }); markers[place.name].openPopup(); }
+        else window.open(osmLink(place), '_blank', 'noopener');
+      });
+      item.appendChild(button); placeList.appendChild(item);
+    });
+
+    function showMap() {
+      if (mapStarted) return;
+      mapStarted = true;
+      if (window.L) { buildMap(); return; }
+      var css = document.createElement('link');
+      css.rel = 'stylesheet'; css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(css);
+      var script = document.createElement('script');
+      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      script.crossOrigin = 'anonymous';
+      script.onload = buildMap;
+      script.onerror = function () { mapStarted = false; if (status) status.textContent = 'Die Karte konnte nicht geladen werden. Die Ortsliste bleibt verfügbar.'; };
+      document.head.appendChild(script);
+    }
+
+    function buildMap() {
+      if (!window.L || mapElement.dataset.ready === 'true') return;
+      mapElement.dataset.ready = 'true';
+      map = L.map(mapElement, { scrollWheelZoom: false, preferCanvas: true }).setView([52.567, 13.878], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap-Mitwirkende</a>'
+      }).addTo(map);
+      D.mapPoints.forEach(function (place) {
+        var icon = L.divIcon({ className: 'map-emoji-icon', html: '<span><i>' + esc(place.icon || '📍') + '</i></span>', iconSize: [40, 40], iconAnchor: [20, 36], popupAnchor: [0, -34] });
+        var marker = L.marker([place.lat, place.lon], { icon: icon, title: place.name, alt: place.name }).addTo(map);
+        markers[place.name] = marker;
+        marker.bindPopup('<div class="map-popup"><span>' + esc(place.type) + '</span><strong>' + esc(place.name) + '</strong><p>' + esc(place.text) + '</p><a href="' + esc(place.url || osmLink(place)) + '" target="_blank" rel="noopener">Mehr dazu ↗</a></div>');
+      });
+      if (status) status.hidden = true;
+      setTimeout(function () { map.invalidateSize(); }, 160);
+    }
+
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (items) {
+        if (items[0].isIntersecting) { showMap(); observer.disconnect(); }
+      }, { rootMargin: '240px' });
+      observer.observe(section);
+    } else showMap();
+  }
+
+  function initAtmosphere() {
+    var layer = $('#seasonEffects');
+    var activeEffect = '';
+    var rainTimer = 0;
+    var effects = {
+      autumn: ['🍂', '🍁', '🍃'], winter: ['❄️', '❄️', '✨'], spring: ['🌸', '🌼', '🌷'], summer: ['✨', '☀️', '🫧'],
+      halloween: ['🎃', '🦇', '👻'], nikolaus: ['⭐', '🍫', '🎁'], christmas: ['❄️', '⭐', '🎄'], easter: ['🥚', '🐰', '🐣'], newyear: ['🎆', '✨', '⭐'], valentines: ['💖', '🌹', '✨']
+    };
+
+    function easterSunday(year) {
+      var a = year % 19, b = Math.floor(year / 100), c = year % 100;
+      var d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+      var h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4;
+      var l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+      var month = Math.floor((h + l - 7 * m + 114) / 31), day = ((h + l - 7 * m + 114) % 31) + 1;
+      return new Date(year, month - 1, day);
+    }
+    function update() {
+      var berlin = {};
+      new Intl.DateTimeFormat('en', { timeZone: 'Europe/Berlin', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', hourCycle: 'h23' }).formatToParts(new Date()).forEach(function (part) { berlin[part.type] = Number(part.value); });
+      var year = berlin.year, month = berlin.month, day = berlin.day, hour = berlin.hour;
+      var date = new Date(year, month - 1, day);
+      var easter = easterSunday(year), easterStart = new Date(easter); easterStart.setDate(easter.getDate() - 2);
+      var easterEnd = new Date(easter); easterEnd.setDate(easter.getDate() + 1);
+      var season = (month === 12 || month <= 2 || (month === 3 && day < 20)) ? 'winter' :
+        ((month === 3 && day >= 20) || month === 4 || month === 5 || (month === 6 && day <= 20)) ? 'spring' :
+        ((month === 6 && day >= 21) || month === 7 || month === 8 || (month === 9 && day <= 22)) ? 'summer' : 'autumn';
+      var celebration = 'none';
+      if (month === 10 && day === 31) celebration = 'halloween';
+      else if (month === 12 && day === 6) celebration = 'nikolaus';
+      else if (month === 12 && day >= 24 && day <= 26) celebration = 'christmas';
+      else if (month === 12 && day === 31 || month === 1 && day === 1) celebration = 'newyear';
+      else if (month === 2 && day === 14) celebration = 'valentines';
+      else if (date >= easterStart && date <= easterEnd) celebration = 'easter';
+      var daypart = hour >= 5 && hour < 10 ? 'morning' : hour >= 10 && hour < 17 ? 'day' : hour >= 17 && hour < 21 ? 'evening' : 'night';
+      document.body.dataset.season = season;
+      document.body.dataset.celebration = celebration;
+      document.body.dataset.daypart = daypart;
+      var badge = $('#atmosphereBadge');
+      if (badge) {
+        var names = { autumn: 'Herbst', winter: 'Winter', spring: 'Frühling', summer: 'Sommer', halloween: 'Halloween', nikolaus: 'Nikolaus', christmas: 'Weihnachten', easter: 'Ostern', newyear: 'Silvester', valentines: 'Valentinstag', morning: 'Morgenstimmung', day: 'Tageslicht', evening: 'Abendstimmung', night: 'Nachtstimmung' };
+        badge.textContent = (names[celebration] || names[season]) + ' · ' + names[daypart] + ' in Strausberg';
+      }
+      var effect = celebration !== 'none' ? celebration : season;
+      if (!layer || effect === activeEffect) return;
+      activeEffect = effect;
+      clearInterval(rainTimer);
+      layer.replaceChildren();
+      if (reduce) return;
+      function drop() {
+        var options = effects[activeEffect] || effects.autumn;
+        var particle = document.createElement('span');
+        particle.textContent = options[Math.floor(Math.random() * options.length)];
+        particle.style.setProperty('--x', (Math.random() * 100) + 'vw');
+        particle.style.setProperty('--size', (.8 + Math.random() * 1.25) + 'rem');
+        particle.style.setProperty('--duration', (8 + Math.random() * 7) + 's');
+        particle.style.setProperty('--drift', ((Math.random() - .5) * 20) + 'vw');
+        layer.appendChild(particle);
+        particle.addEventListener('animationend', function () { particle.remove(); }, { once: true });
+      }
+      for (var n = 0; n < 7; n++) setTimeout(drop, n * 250);
+      rainTimer = setInterval(drop, celebration === 'none' ? 1150 : 850);
+    }
+    update();
+    setInterval(update, 5 * 60 * 1000);
+  }
+
+  function initDuckHunt() {
+    var ducks = $$('.duck-collectible'), progress = $('#duckHuntProgress'), reward = $('#duckHuntWin');
+    if (!ducks.length || !progress) return;
+    var found = new Set();
+    try {
+      var saved = JSON.parse(localStorage.getItem('professorente-duck-hunt') || '[]');
+      if (Array.isArray(saved)) saved.forEach(function (id) { found.add(String(id)); });
+    } catch (_) {}
+    function update() {
+      ducks.forEach(function (duck) {
+        var collected = found.has(duck.dataset.duckId);
+        duck.classList.toggle('is-collected', collected);
+        duck.disabled = collected;
+        if (collected) duck.setAttribute('aria-label', 'Ente bereits eingesammelt');
+      });
+      progress.textContent = Math.min(found.size, ducks.length) + ' / ' + ducks.length;
+      if (reward) reward.hidden = found.size < ducks.length;
+    }
+    ducks.forEach(function (duck) {
+      duck.addEventListener('click', function () {
+        found.add(duck.dataset.duckId);
+        try { localStorage.setItem('professorente-duck-hunt', JSON.stringify(Array.from(found))); } catch (_) {}
+        update();
+      });
+    });
+    update();
   }
 
   var ICONS = {
@@ -967,8 +1198,11 @@
     initThemeStudio();
     initSoundEffects();
     initDuckInteraction();
+    initAtmosphere();
+    initDuckHunt();
     initVisitorCounter();
     initScrollTop();
+    initStrausbergMap();
     initRipples();
     initEyes();
     initEasterEgg();
@@ -977,6 +1211,7 @@
     initNav();
     initRoles();
     initScripts();
+    initProjectLeaderboard();
     initMarquee();
     initProjects();
     initLearning();

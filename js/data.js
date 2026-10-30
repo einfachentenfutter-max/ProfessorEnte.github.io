@@ -166,6 +166,16 @@ window.PE_DATA = {
     { title: 'MedicNet', category: 'Web & Apps', desc: 'App für den Sanitätsdienst: Patientenprotokolle, Unterschrift per Stift, Normwerte, Metronom.', details: ['Vereint Patientenprotokolle, Stift-Unterschrift, Normwerte und Metronom.', 'Das Projekt befindet sich in Entwicklung.'], tags: ['App', 'in Entwicklung'] }
   ],
 
+  mapPoints: [
+    { name: 'DRK-Bereitschaft Strausberg', type: 'DRK & Ehrenamt', text: 'Wachgebäude der Bereitschaft auf dem STIC-Gelände.', lat: 52.5716556, lon: 13.8942634, icon: '✚', url: 'https://www.drk-mohs.de/mitwirken/s4/bereitschaft/bereitschaften/strausberg.html' },
+    { name: 'Straussee', type: 'Natur & Freizeit', text: 'Der See und seine Ufer mitten in Strausberg.', lat: 52.5790494, lon: 13.8759077, icon: '🌊', url: 'https://www.openstreetmap.org/?mlat=52.5790494&mlon=13.8759077#map=15/52.57905/13.87591' },
+    { name: 'McDonald’s Strausberg', type: 'Treffpunkt', text: 'Restaurant im Handelscentrum, Herrenseeallee 15a.', lat: 52.5559849, lon: 13.8680213, icon: '🍔', url: 'https://www.handelscentrum-strausberg.de/oeffnungszeiten' },
+    { name: 'Sport- und Erholungspark', type: 'Sport & Freizeit', text: 'Das SEP-Gelände im Süden der Stadt.', lat: 52.5402677, lon: 13.8369236, icon: '🏃', url: 'https://www.sep-strausberg.de/' },
+    { name: 'Freiwillige Feuerwehr Strausberg', type: 'Helfen & Einsatz', text: 'Feuerwehrhaus, Philipp-Müller-Straße 1.', lat: 52.580254, lon: 13.888445, icon: '🚒', url: 'https://feuerwehr-strausberg.de/kontakt/' },
+    { name: 'Marktplatz Strausberg', type: 'Altstadt', text: 'Der historische Marktplatz in der Strausberger Altstadt.', lat: 52.5806809, lon: 13.8808696, icon: '📍', url: 'https://www.openstreetmap.org/?mlat=52.5806809&mlon=13.8808696#map=17/52.58068/13.88087' },
+    { name: 'Flugplatz Strausberg', type: 'Technik & Luftfahrt', text: 'Flugplatz und Luftfahrtstandort am nördlichen Stadtrand.', lat: 52.5886237, lon: 13.9108085, icon: '✈️', url: 'https://www.openstreetmap.org/?mlat=52.5886237&mlon=13.9108085#map=15/52.58862/13.91081' }
+  ],
+
   roadmap: [
     { title: 'Car Development', text: 'Eigene Fahrzeuge für FiveM entwickeln – von der Handling-Abstimmung bis zum fertigen Add-on.', label: 'Lernfeld' },
     { title: 'MLOs', text: 'Interiors gestalten und in Spielwelten einbinden, damit neue Orte spielbar werden.', label: 'Lernfeld' },
