@@ -474,6 +474,13 @@ html.has-site-loader .site-loader { opacity: 1; visibility: visible; }
 .private-section .section-lead { margin-bottom: 36px; }
 .private-section .eyebrow { color: var(--pond-600); }
 .private-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.private-photo-card { grid-column: span 2; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1fr); align-items: center; gap: clamp(22px, 4vw, 42px); overflow: hidden; padding: 20px; border: 1px solid rgba(11,34,39,.08); border-radius: 30px; background: var(--paper); box-shadow: 0 18px 38px -28px rgba(11,34,39,.38); }
+.private-photo-figure { position: relative; width: 100%; max-width: 390px; margin: 0 auto; overflow: hidden; border-radius: 22px; background: var(--pond-900); aspect-ratio: 3 / 4; }
+.private-photo-figure img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; }
+.private-photo-figure figcaption { position: absolute; right: 0; bottom: 0; left: 0; padding: 30px 16px 13px; color: #fff; background: linear-gradient(transparent, rgba(5,18,21,.72)); font-size: .84rem; font-weight: 700; }
+.private-photo-copy { padding: 20px clamp(8px, 2vw, 26px) 20px 0; }
+.private-photo-copy h3 { max-width: 15ch; margin: 0 0 12px; font-family: var(--font-display); font-size: clamp(1.5rem, 2.5vw, 2.2rem); line-height: 1.08; }
+.private-photo-copy p { max-width: 34ch; margin: 0; color: var(--slate); }
 .private-card { min-height: 230px; padding: 30px; border: 1px solid rgba(11,34,39,.08); border-radius: 26px; background: var(--paper); box-shadow: 0 18px 38px -28px rgba(11,34,39,.38); transition: transform .35s var(--ease), box-shadow .35s; }
 .private-card:hover { transform: translateY(-7px); box-shadow: 0 26px 48px -28px rgba(11,34,39,.42); }
 .private-icon { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 18px; border-radius: 14px; background: rgba(244,182,58,.2); color: var(--pond-900); font-size: 1.25rem; }
@@ -684,6 +691,9 @@ body[data-theme="duck"] .duck-rain span { opacity: .72; }
   .scroll-cue { display: none; }
 }
 @media (max-width: 760px) {
+  .private-photo-card { grid-column: auto; grid-template-columns: 1fr; gap: 8px; padding: 14px; }
+  .private-photo-figure { max-width: 430px; }
+  .private-photo-copy { padding: 16px 10px 20px; }
   .scroll-top { right: 14px; bottom: 136px; width: 46px; height: 46px; }
   .theme-tools { left: 14px; bottom: 14px; }
   .server-card { align-items: flex-start; flex-direction: column; }
