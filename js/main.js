@@ -302,9 +302,9 @@
           '<img class="audi-static-image" src="assets/audi-angularfront.avif" alt="Audi in Front-Schrägansicht" loading="lazy">' +
           '<canvas id="audiMontageCanvas" aria-label="3D-Montage: Das originale Audi-RS-6-Modell setzt sich aus bewegten Bauteilen zusammen."></canvas>' +
           '<div class="audi-montage-glow" aria-hidden="true"></div>' +
-          '<div class="audi-montage-top"><span class="audi-kicker"><i></i> THREE.JS · 3D MONTAGE</span><div class="audi-top-actions"><span class="audi-build-state" id="audiBuildState">MONTAGE LÄUFT</span>' +
+          '<div class="audi-montage-top"><span class="audi-kicker"><i></i> THREE.JS · RS 6 AVANT</span><div class="audi-top-actions"><span class="audi-build-state" id="audiBuildState">MONTAGE LÄUFT</span>' +
           '<button class="audi-replay" id="audiReplay" type="button"><span aria-hidden="true">↻</span> Montage neu starten</button></div></div>' +
-          '<div class="audi-montage-bottom"><div><span class="audi-index">01 / QUATTRO</span><h3>Audi, Stück für Stück.</h3><p>Ein Bild. Neu zusammengesetzt im Raum.</p></div></div>' +
+          '<div class="audi-montage-bottom"><div><span class="audi-index">01 / QUATTRO</span><h3>Audi, Stück für Stück.</h3><p>Der RS 6. Neu zusammengesetzt im Raum.</p></div></div>' +
           '<span class="audi-hint" aria-hidden="true">Ziehen zum Drehen <span>↔</span></span></div>' +
           '<div class="project-audi-copy"><div><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p></div><div class="tags">' + tags + '</div></div></li>';
       }

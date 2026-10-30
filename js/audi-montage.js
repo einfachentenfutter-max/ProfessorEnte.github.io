@@ -161,7 +161,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
         if (bounds.isEmpty()) { modelLoading = false; return; }
         var size = bounds.getSize(new THREE.Vector3());
         var center = bounds.getCenter(new THREE.Vector3());
-        var scale = Math.min(8.4 / Math.max(size.x, size.z), 4.45 / Math.max(size.y, .001));
+        var scale = Math.min(10.2 / Math.max(size.x, size.z), 4.45 / Math.max(size.y, .001));
         var longestAxisIsDepth = size.z > size.x;
 
         clearImageTiles();
@@ -169,7 +169,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
         rig.name = 'Audi RS 6 Avant – Montage';
         asset.scale.setScalar(scale);
         asset.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
-        rig.rotation.y = (longestAxisIsDepth ? Math.PI / 2 : 0) + .22;
+        rig.rotation.y = (longestAxisIsDepth ? Math.PI / 2 : 0) - .52;
         rig.add(asset);
         group.add(rig);
         rig.updateMatrixWorld(true);
@@ -288,7 +288,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
       if (complete) {
         var turntable = vehicleRoot || group;
         var baseYaw = vehicleRoot ? vehicleBaseYaw : 0;
-        turntable.rotation.y += (baseYaw + targetY + Math.sin(elapsed * .32) * .055 - turntable.rotation.y) * Math.min(1, dt * 1.1);
+        turntable.rotation.y += (baseYaw + targetY + Math.sin(elapsed * .32) * .11 - turntable.rotation.y) * Math.min(1, dt * 1.1);
         turntable.rotation.x += (targetX + Math.sin(elapsed * .48) * .018 - turntable.rotation.x) * Math.min(1, dt * 1.1);
         if (!root.classList.contains('audi-complete')) {
           root.classList.add('audi-complete');
