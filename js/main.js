@@ -300,7 +300,7 @@
       if (p.title === 'Audi-Autohaus-Website') {
         return '<li class="reveal project-audi"><div class="audi-montage" id="audiMontage">' +
           '<img class="audi-static-image" src="assets/audi-angularfront.avif" alt="Audi in Front-Schrägansicht" loading="lazy">' +
-          '<canvas id="audiMontageCanvas" aria-label="3D-Montage: Das Audi-Fahrzeug setzt sich aus animierten Bildsegmenten zusammen."></canvas>' +
+          '<canvas id="audiMontageCanvas" aria-label="3D-Montage: Das originale Audi-RS-6-Modell setzt sich aus bewegten Bauteilen zusammen."></canvas>' +
           '<div class="audi-montage-glow" aria-hidden="true"></div>' +
           '<div class="audi-montage-top"><span class="audi-kicker"><i></i> THREE.JS · 3D MONTAGE</span><div class="audi-top-actions"><span class="audi-build-state" id="audiBuildState">MONTAGE LÄUFT</span>' +
           '<button class="audi-replay" id="audiReplay" type="button"><span aria-hidden="true">↻</span> Montage neu starten</button></div></div>' +
