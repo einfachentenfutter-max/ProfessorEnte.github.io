@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261030-fivem1">
+  <link rel="stylesheet" href="css/style.css?v=20261030-themes1">
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}
   </script>
@@ -47,6 +47,22 @@
     <a href="#kontakt" class="nav-cta">Kontakt</a>
   </nav>
 </header>
+
+<div class="theme-tools">
+  <button class="theme-gear" id="themeToggle" type="button" aria-label="Design einstellen" aria-expanded="false" aria-controls="themePanel" title="Design einstellen">
+    <span aria-hidden="true">⚙</span>
+  </button>
+  <section class="theme-panel" id="themePanel" aria-label="Design auswählen" hidden>
+    <p class="theme-panel-kicker">DEIN LOOK</p>
+    <h2>Design einstellen</h2>
+    <div class="theme-options" role="group" aria-label="Design">
+      <button type="button" class="theme-option" data-theme-choice="light" aria-pressed="true"><span class="theme-swatch theme-swatch-light" aria-hidden="true">☀</span><span><strong>Hell</strong><small>Das Original-Design</small></span><span class="theme-check" aria-hidden="true">✓</span></button>
+      <button type="button" class="theme-option" data-theme-choice="duck" aria-pressed="false"><span class="theme-swatch theme-swatch-duck" aria-hidden="true">🐤</span><span><strong>Entenmodus</strong><small>Gold, Orange und Entenregen</small></span><span class="theme-check" aria-hidden="true">✓</span></button>
+      <button type="button" class="theme-option" data-theme-choice="dark" aria-pressed="false"><span class="theme-swatch theme-swatch-dark" aria-hidden="true">☾</span><span><strong>Dunkel</strong><small>Ruhige dunkle Farben</small></span><span class="theme-check" aria-hidden="true">✓</span></button>
+    </div>
+  </section>
+</div>
+<div class="duck-rain" id="duckRain" aria-hidden="true"></div>
 
 <main id="top">
 
@@ -414,6 +430,6 @@
 <script src="js/config.js?v=20261030-ecg1"></script>
 <script src="js/data.js?v=20261030-projects1"></script>
 <script type="module" src="js/audi-montage.js?v=20261030-music2"></script>
-<script src="js/main.js?v=20261030-projects1" defer></script>
+<script src="js/main.js?v=20261030-themes1" defer></script>
 </body>
 </html>

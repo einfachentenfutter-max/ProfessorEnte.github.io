@@ -272,6 +272,69 @@
     update();
   }
 
+  /* ───────────── Designwahl und Entenregen ───────────── */
+  function initThemeStudio() {
+    var toggle = $('#themeToggle'), panel = $('#themePanel'), rain = $('#duckRain');
+    if (!toggle || !panel || !rain) return;
+    var choices = $$('.theme-option', panel), timer = 0;
+    var emojis = ['🐤', '🐣', '🦆', '🐥'];
+    var theme = 'light';
+    try { theme = localStorage.getItem('professorente-theme') || 'light'; } catch (_) {}
+    if (!['light', 'duck', 'dark'].includes(theme)) theme = 'light';
+
+    function makeDuck() {
+      if (document.body.dataset.theme !== 'duck' || reduce) return;
+      while (rain.childElementCount > 25) rain.firstElementChild.remove();
+      var duck = document.createElement('span');
+      duck.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      duck.style.setProperty('--x', (Math.random() * 96) + 'vw');
+      duck.style.setProperty('--size', (1 + Math.random() * 1.15) + 'rem');
+      duck.style.setProperty('--duration', (6 + Math.random() * 6) + 's');
+      duck.style.setProperty('--drift', ((Math.random() - .5) * 24) + 'vw');
+      rain.appendChild(duck);
+      duck.addEventListener('animationend', function () { duck.remove(); }, { once: true });
+    }
+
+    function setTheme(value) {
+      theme = value;
+      document.body.dataset.theme = value;
+      choices.forEach(function (button) {
+        button.setAttribute('aria-pressed', button.dataset.themeChoice === value ? 'true' : 'false');
+      });
+      clearInterval(timer);
+      rain.replaceChildren();
+      if (value === 'duck' && !reduce) {
+        for (var i = 0; i < 7; i++) setTimeout(makeDuck, i * 180);
+        timer = setInterval(makeDuck, 680);
+      }
+      try { localStorage.setItem('professorente-theme', value); } catch (_) {}
+    }
+
+    toggle.addEventListener('click', function () {
+      var open = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      panel.hidden = !open;
+      if (open) choices[0].focus();
+    });
+    choices.forEach(function (button) {
+      button.addEventListener('click', function () { setTheme(button.dataset.themeChoice); });
+    });
+    document.addEventListener('click', function (event) {
+      if (!panel.hidden && !event.target.closest('.theme-tools')) {
+        panel.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !panel.hidden) {
+        panel.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.focus();
+      }
+    });
+    setTheme(theme);
+  }
+
   function initNav() {
     var t = $('#navToggle'), l = $('#navLinks');
     t.addEventListener('click', function () {
@@ -766,6 +829,7 @@
   /* ───────────── Start ───────────── */
   function boot() {
     initTitle();
+    initThemeStudio();
     initRipples();
     initEyes();
     initEasterEgg();
