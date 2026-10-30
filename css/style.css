@@ -251,6 +251,17 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .marquee-track span { font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; letter-spacing: -.02em; white-space: nowrap; display: inline-flex; align-items: center; gap: 56px; }
 .marquee-track span::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--duck); }
 
+/* ---------- Aktueller FiveM-Server ---------- */
+.fivem-server { overflow: hidden; color: var(--paper); background: radial-gradient(ellipse at 84% 18%, rgba(47,122,133,.42), transparent 42%), var(--pond-950); }
+.fivem-server .eyebrow { color: var(--duck); }
+.fivem-server .section-lead { color: rgba(246,250,248,.72); margin-bottom: 32px; }
+.server-card { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: clamp(26px, 5vw, 48px); border: 1px solid rgba(246,250,248,.16); border-radius: 30px; background: linear-gradient(120deg, rgba(246,250,248,.09), rgba(246,250,248,.035)); box-shadow: 0 28px 70px -42px rgba(0,0,0,.8); }
+.server-card-copy { max-width: 62ch; }
+.server-label { display: inline-block; margin-bottom: 12px; color: var(--duck); font-size: .76rem; font-weight: 700; letter-spacing: .12em; }
+.server-card h3 { margin: 0 0 9px; font-family: var(--font-display); font-size: clamp(1.7rem, 3vw, 2.5rem); letter-spacing: -.03em; }
+.server-card p { margin: 0; color: rgba(246,250,248,.72); }
+.server-card .btn { flex: 0 0 auto; text-decoration: none; }
+
 /* ---------- Dead Yard ---------- */
 .yard { background: var(--pond-900); color: var(--paper); overflow: hidden; }
 .yard::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 50% at 85% 30%, rgba(47,122,133,.45), transparent 70%); pointer-events: none; }
@@ -522,8 +533,8 @@ body.egg-open { overflow: hidden; }
 
 /* ---------- Responsive ---------- */
 @media (min-width: 981px) and (max-width: 1180px) {
-  .nav-links { gap: 2px; }
-  .nav-links a { padding: 8px 10px; font-size: .88rem; }
+  .nav-links { gap: 1px; }
+  .nav-links a { padding: 7px 7px; font-size: .79rem; }
 }
 @media (max-width: 980px) {
   .section { padding: 90px 0; }
@@ -556,6 +567,7 @@ body.egg-open { overflow: hidden; }
   .scroll-cue { display: none; }
 }
 @media (max-width: 760px) {
+  .server-card { align-items: flex-start; flex-direction: column; }
   .rhythm-monitor { height: 210px; }
   .private-grid { grid-template-columns: 1fr; }
   .nav-toggle { display: block; }
