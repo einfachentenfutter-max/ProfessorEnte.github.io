@@ -16,12 +16,18 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261030-themes1">
+  <link rel="stylesheet" href="css/style.css?v=20261030-funpack1">
+  <script>document.documentElement.classList.add('has-site-loader');</script>
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"}}
   </script>
 </head>
 <body>
+
+<div class="site-loader" id="siteLoader" role="status" aria-live="polite">
+  <div class="loader-orbit" aria-hidden="true"><span>🐥</span></div>
+  <p>ProfessorEnte lädt …</p>
+</div>
 
 <div class="progress" aria-hidden="true">
   <div class="progress-bar" id="progressBar"></div>
@@ -60,6 +66,7 @@
       <button type="button" class="theme-option" data-theme-choice="duck" aria-pressed="false"><span class="theme-swatch theme-swatch-duck" aria-hidden="true">🐤</span><span><strong>Entenmodus</strong><small>Gold, Orange und Entenregen</small></span><span class="theme-check" aria-hidden="true">✓</span></button>
       <button type="button" class="theme-option" data-theme-choice="dark" aria-pressed="false"><span class="theme-swatch theme-swatch-dark" aria-hidden="true">☾</span><span><strong>Dunkel</strong><small>Ruhige dunkle Farben</small></span><span class="theme-check" aria-hidden="true">✓</span></button>
     </div>
+    <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="false"><span aria-hidden="true">♫</span><span class="sound-toggle-label">Soundeffekte: aus</span><span class="sound-toggle-state" aria-hidden="true">OFF</span></button>
   </section>
 </div>
 <div class="duck-rain" id="duckRain" aria-hidden="true"></div>
@@ -134,6 +141,7 @@
             <path class="water-front" d="M62 322 Q100 304 140 322 T220 322 T300 322 T358 322 Q362 352 210 358 Q58 352 62 322 Z" fill="#2F7A85" fill-opacity=".55"/>
           </g>
         </svg>
+        <div class="duck-reaction" id="duckReaction" aria-live="polite" aria-atomic="true"></div>
         <div class="disco-set" id="discoSet" aria-hidden="true">
           <span class="disco-thread"></span>
           <div class="disco-beams"></div>
@@ -300,6 +308,11 @@
     <div class="container">
       <h2 class="h2 reveal-clip">Weitere Projekte.</h2>
       <p class="section-lead reveal">Neben FiveM baue ich Spiele, Mods, Webseiten und Apps. Öffne die Details eines Projekts, um mehr darüber zu erfahren. <a class="project-demo-link" href="https://professorente.itch.io/dead-yard" target="_blank" rel="noopener">Dead Yard direkt spielen ↗</a></p>
+      <div class="project-tools reveal">
+        <label class="project-search-wrap" for="projectSearch"><span aria-hidden="true">⌕</span><input id="projectSearch" type="search" placeholder="Projekte durchsuchen …" autocomplete="off"><span class="sr-only">Projekte durchsuchen</span></label>
+        <div class="project-filters" id="projectFilters" role="group" aria-label="Projekte nach Bereich filtern"></div>
+      </div>
+      <p class="project-result-count" id="projectResultCount" aria-live="polite"></p>
       <ul class="project-list" id="projectList"></ul>
     </div>
   </section>
@@ -383,6 +396,7 @@
 <footer class="footer">
   <div class="container footer-inner">
     <p>© <span id="year">2026</span> ProfessorEnte (Jayden). Alle Rechte vorbehalten.</p>
+    <p class="visitor-count">👀 <span>Besuche</span> <strong id="visitorCount" aria-live="polite">Zähler lädt …</strong><small>Externer Zähler · <a href="https://countapi.mileshilliard.com/" target="_blank" rel="noopener">CountAPI</a></small></p>
     <a href="#top">Nach oben</a>
   </div>
 </footer>
@@ -426,10 +440,11 @@
   </div>
   <audio id="musicAudio" preload="none"></audio>
 </aside>
+<button class="scroll-top" id="scrollTop" type="button" aria-label="Zurück nach oben" title="Zurück nach oben"><span aria-hidden="true">↑</span><span class="scroll-top-duck" aria-hidden="true">🐤</span></button>
 
 <script src="js/config.js?v=20261030-ecg1"></script>
-<script src="js/data.js?v=20261030-projects1"></script>
+<script src="js/data.js?v=20261030-funpack1"></script>
 <script type="module" src="js/audi-montage.js?v=20261030-music2"></script>
-<script src="js/main.js?v=20261030-themes1" defer></script>
+<script src="js/main.js?v=20261030-funpack1" defer></script>
 </body>
 </html>

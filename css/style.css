@@ -25,6 +25,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+html.has-site-loader { overflow: hidden; }
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -111,6 +112,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .theme-option small { color: var(--slate); font-size: .78rem; line-height: 1.35; }
 .theme-check { display: grid; width: 22px; height: 22px; place-items: center; border-radius: 50%; color: transparent; background: transparent; font-size: .8rem; }
 .theme-option[aria-pressed="true"] .theme-check { color: var(--paper); background: var(--pond-600); }
+.sound-toggle { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 14px; padding: 12px 10px 2px; border: 0; border-top: 1px solid var(--mist-deep); color: var(--ink); background: transparent; text-align: left; font-weight: 700; }
+.sound-toggle > span:first-child { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 10px; background: var(--mist); color: var(--pond-600); }
+.sound-toggle-label { flex: 1; font-size: .88rem; }
+.sound-toggle-state { padding: 3px 8px; border-radius: 999px; background: var(--mist-deep); color: var(--slate); font-size: .66rem; letter-spacing: .06em; }
+.sound-toggle[aria-pressed="true"] .sound-toggle-state { color: var(--paper); background: var(--pond-600); }
 .duck-rain { position: fixed; z-index: 8; inset: 0; overflow: hidden; pointer-events: none; visibility: hidden; }
 .duck-rain span { position: absolute; top: -10vh; left: var(--x); opacity: .62; font-size: var(--size); line-height: 1; filter: drop-shadow(0 4px 5px rgba(112,67,15,.18)); animation: duck-fall var(--duration) linear forwards; }
 body[data-theme="duck"] .duck-rain { visibility: visible; }
@@ -139,6 +145,9 @@ body[data-theme="duck"] .duck-rain { visibility: visible; }
 .hero-roles li { padding: 6px 16px; border-radius: 999px; background: rgba(16,51,58,.09); font-weight: 600; font-size: .95rem; }
 
 .hero-duck { position: relative; z-index: 1; }
+.duck-reaction { position: absolute; z-index: 4; top: 2%; left: 50%; padding: 8px 15px; border: 1px solid rgba(11,34,39,.08); border-radius: 999px; color: var(--pond-950); background: var(--paper); box-shadow: 0 10px 28px -16px rgba(11,34,39,.55); font-weight: 700; opacity: 0; pointer-events: none; transform: translate(-50%, 8px) scale(.88); transition: opacity .2s, transform .3s var(--ease); white-space: nowrap; }
+.duck-reaction.is-active { opacity: 1; transform: translate(-50%, 0) scale(1); }
+#duck.duck-cheer { animation: duck-cheer .58s cubic-bezier(.2,.9,.3,1.4); transform-origin: center 75%; }
 #duck { position: relative; z-index: 2; width: 100%; max-width: 440px; margin-inline: auto; overflow: visible; }
 .duck-drop { transform-box: fill-box; animation: duck-drop 1.2s 1.5s cubic-bezier(.3, 1.4, .5, 1) backwards; }
 .duck-bob { transform-origin: 210px 300px; animation: bob 4.2s ease-in-out infinite; }
@@ -312,6 +321,16 @@ body[data-theme="duck"] .duck-rain { visibility: visible; }
 /* ---------- Projekte ---------- */
 .projects { background: var(--paper); }
 .project-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--pond-900); }
+.project-tools { display: grid; gap: 15px; margin: 30px 0 8px; }
+.project-search-wrap { display: flex; align-items: center; gap: 12px; width: min(100%, 520px); padding: 4px 17px; border: 1px solid var(--mist-deep); border-radius: 999px; color: var(--pond-600); background: var(--mist); transition: border-color .2s, box-shadow .2s; }
+.project-search-wrap:focus-within { border-color: var(--pond-600); box-shadow: 0 0 0 4px rgba(47,122,133,.12); }
+.project-search-wrap > span:first-child { font-size: 1.8rem; line-height: 1; transform: rotate(-20deg); }
+.project-search-wrap input { width: 100%; padding: 11px 0; border: 0; outline: 0; color: var(--ink); background: transparent; font: inherit; }
+.project-search-wrap input::placeholder { color: var(--slate); opacity: .8; }
+.project-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.project-filter { font-size: .86rem; }
+.project-result-count { min-height: 1.4em; margin: 0 0 12px; color: var(--slate); font-size: .88rem; }
+.project-list > li.project-filtered-out { display: none !important; }
 .project-list li { display: grid; grid-template-columns: 1.1fr 1.6fr auto; gap: 28px; align-items: center; padding: 26px 12px; border-bottom: 1px solid var(--mist-deep); position: relative; transition: padding .35s var(--ease), background .35s; }
 .project-list li.reveal { transition: opacity .7s var(--ease), transform .7s var(--ease), padding .35s var(--ease), background .35s; }
 .project-list li::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--duck); transition: width .35s var(--ease); }
@@ -408,6 +427,22 @@ body[data-theme="duck"] .duck-rain { visibility: visible; }
 .footer p { margin: 0; }
 .footer a { text-decoration: none; }
 .footer a:hover { color: var(--duck); }
+.visitor-count { display: grid; grid-template-columns: auto auto; column-gap: 7px; align-items: center; margin: 0; color: rgba(246,250,248,.78); }
+.visitor-count strong { color: var(--duck); font-variant-numeric: tabular-nums; }
+.visitor-count small { grid-column: 1 / -1; color: rgba(246,250,248,.48); font-size: .72rem; }
+.visitor-count small a { color: inherit; }
+.scroll-top { position: fixed; z-index: 46; right: 24px; bottom: 146px; display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid rgba(11,34,39,.1); border-radius: 50%; color: var(--paper); background: var(--pond-900); box-shadow: 0 12px 34px -13px rgba(11,34,39,.55); font-size: 1.3rem; opacity: 0; visibility: hidden; transform: translateY(12px) scale(.85); transition: opacity .25s, visibility .25s, transform .3s var(--ease), background .2s; }
+.scroll-top.is-visible { opacity: 1; visibility: visible; transform: none; }
+.scroll-top:hover { background: var(--bill); }
+.scroll-top-duck { position: absolute; right: -5px; top: -8px; font-size: 1rem; transform: rotate(12deg); }
+
+/* ---------- Seitenstart ---------- */
+.site-loader { position: fixed; z-index: 300; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; color: var(--pond-950); background: var(--paper); opacity: 0; visibility: hidden; transition: opacity .55s ease, visibility .55s; }
+html.has-site-loader .site-loader { opacity: 1; visibility: visible; }
+.site-loader.is-leaving { opacity: 0; visibility: hidden; }
+.site-loader p { margin: 0; font-family: var(--font-display); font-weight: 700; letter-spacing: .02em; }
+.loader-orbit { display: grid; width: 82px; height: 82px; place-items: center; border: 2px solid var(--mist-deep); border-top-color: var(--duck); border-radius: 50%; animation: loader-spin 1.1s linear infinite; }
+.loader-orbit span { font-size: 2.3rem; animation: loader-bob .55s ease-in-out infinite alternate; }
 
 /* ---------- EKG-Rhythmus-Simulation ---------- */
 .rhythm-section { overflow: hidden; color: var(--paper); background: radial-gradient(ellipse at 88% 45%, rgba(47,122,133,.34), transparent 42%), linear-gradient(135deg, var(--pond-950), var(--pond-900)); }
@@ -563,6 +598,9 @@ body.egg-open { overflow: hidden; }
 @keyframes gear-idle { to { transform: rotate(360deg); } }
 @keyframes theme-panel-in { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
 @keyframes duck-fall { from { transform: translate3d(0, -8vh, 0) rotate(-18deg); } to { transform: translate3d(var(--drift), 120vh, 0) rotate(380deg); } }
+@keyframes loader-spin { to { transform: rotate(360deg); } }
+@keyframes loader-bob { to { transform: translateY(-6px) rotate(-9deg); } }
+@keyframes duck-cheer { 0%, 100% { transform: rotate(0) scale(1); } 28% { transform: rotate(-5deg) scale(1.045); } 58% { transform: rotate(5deg) scale(1.075); } }
 body[data-theme="dark"] {
   --pond-950: #0a1118;
   --pond-900: #111d27;
@@ -644,6 +682,8 @@ body[data-theme="duck"] .duck-rain span { opacity: .72; }
   .scroll-cue { display: none; }
 }
 @media (max-width: 760px) {
+  .scroll-top { right: 14px; bottom: 136px; width: 46px; height: 46px; }
+  .theme-tools { left: 14px; bottom: 14px; }
   .server-card { align-items: flex-start; flex-direction: column; }
   .rhythm-monitor { height: 210px; }
   .private-grid { grid-template-columns: 1fr; }

@@ -335,6 +335,108 @@
     setTheme(theme);
   }
 
+  /* ───────────── Kleine Extras ───────────── */
+  function initSoundEffects() {
+    var toggle = $('#soundToggle'), label = $('.sound-toggle-label', toggle), state = $('.sound-toggle-state', toggle);
+    var enabled = false, context = null;
+    try { enabled = localStorage.getItem('professorente-sounds') === 'on'; } catch (_) {}
+    if (toggle) {
+      toggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+      label.textContent = 'Soundeffekte: ' + (enabled ? 'an' : 'aus');
+      state.textContent = enabled ? 'ON' : 'OFF';
+      toggle.addEventListener('click', function () {
+        enabled = !enabled;
+        toggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+        label.textContent = 'Soundeffekte: ' + (enabled ? 'an' : 'aus');
+        state.textContent = enabled ? 'ON' : 'OFF';
+        try { localStorage.setItem('professorente-sounds', enabled ? 'on' : 'off'); } catch (_) {}
+        if (enabled) play('ui');
+      });
+    }
+    function play(kind) {
+      if (!enabled) return;
+      var Audio = window.AudioContext || window.webkitAudioContext;
+      if (!Audio) return;
+      try {
+        context = context || new Audio();
+        if (context.state === 'suspended') context.resume();
+        var now = context.currentTime, osc = context.createOscillator(), gain = context.createGain();
+        osc.type = kind === 'duck' ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(kind === 'duck' ? 430 : 620, now);
+        osc.frequency.exponentialRampToValueAtTime(kind === 'duck' ? 245 : 880, now + (kind === 'duck' ? .13 : .075));
+        gain.gain.setValueAtTime(.0001, now);
+        gain.gain.exponentialRampToValueAtTime(kind === 'duck' ? .11 : .045, now + .012);
+        gain.gain.exponentialRampToValueAtTime(.0001, now + (kind === 'duck' ? .16 : .11));
+        osc.connect(gain); gain.connect(context.destination);
+        osc.start(now); osc.stop(now + .18);
+      } catch (_) {}
+    }
+    document.addEventListener('click', function (event) {
+      var target = event.target.closest && event.target.closest('#themeToggle,[data-theme-choice],#duck,.card-toggle,.project-details summary,#scrollTop');
+      if (!target) return;
+      play(target.id === 'duck' ? 'duck' : 'ui');
+    });
+  }
+
+  function initDuckInteraction() {
+    var duck = $('#duck'), bubble = $('#duckReaction');
+    if (!duck || !bubble) return;
+    var lines = ['Quak! 🐤', 'Na, was gibt’s?', 'Ente im Anflug! ✨', 'Quak quak! 🦆'];
+    var index = 0, reset = 0;
+    duck.addEventListener('click', function () {
+      if (document.body.dataset.theme === 'duck') bubble.textContent = ['Quak! 🐤', 'Gelbe Grüße! ✨', 'Watschel watschel! 🐥'][index % 3];
+      else if (document.body.dataset.theme === 'dark') bubble.textContent = ['Quak im Dunkeln! 🌙', 'Pssst … 🦆', 'Nacht-Quak! ✨'][index % 3];
+      else bubble.textContent = lines[index % lines.length];
+      index++;
+      bubble.classList.remove('is-active');
+      duck.classList.remove('duck-cheer');
+      void duck.getBoundingClientRect();
+      bubble.classList.add('is-active');
+      duck.classList.add('duck-cheer');
+      clearTimeout(reset);
+      reset = setTimeout(function () { bubble.classList.remove('is-active'); duck.classList.remove('duck-cheer'); }, 1500);
+    });
+  }
+
+  function initPageLoader() {
+    var loader = $('#siteLoader');
+    if (!loader) return;
+    setTimeout(function () {
+      loader.classList.add('is-leaving');
+      document.documentElement.classList.remove('has-site-loader');
+      setTimeout(function () { loader.hidden = true; }, 650);
+    }, reduce ? 100 : 720);
+  }
+
+  function initVisitorCounter() {
+    var count = $('#visitorCount');
+    if (!count || !window.fetch) return;
+    var key = 'professorente-einfachentenfutter-homepage', endpoint = 'https://countapi.mileshilliard.com/api/v1/';
+    var seenThisSession = false;
+    try { seenThisSession = sessionStorage.getItem('professorente-visit-counted') === 'yes'; } catch (_) {}
+    fetch(endpoint + (seenThisSession ? 'get/' : 'hit/') + key, { cache: 'no-store', mode: 'cors' })
+      .then(function (response) { if (!response.ok) throw new Error('Counter unavailable'); return response.json(); })
+      .then(function (data) {
+        count.textContent = Number(data.value).toLocaleString('de-DE');
+        if (!seenThisSession) try { sessionStorage.setItem('professorente-visit-counted', 'yes'); } catch (_) {}
+      })
+      .catch(function () { count.textContent = '—'; count.title = 'Besucherzähler gerade nicht erreichbar'; });
+  }
+
+  function initScrollTop() {
+    var button = $('#scrollTop');
+    if (!button) return;
+    function update() {
+      var visible = window.scrollY > Math.max(420, window.innerHeight * .65);
+      button.classList.toggle('is-visible', visible);
+      button.setAttribute('aria-hidden', visible ? 'false' : 'true');
+      button.tabIndex = visible ? 0 : -1;
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    button.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); });
+    update();
+  }
+
   function initNav() {
     var t = $('#navToggle'), l = $('#navLinks');
     t.addEventListener('click', function () {
@@ -468,16 +570,22 @@
 
   /* ───────────── Projekte und Lernfelder ───────────── */
   function initProjects() {
-    var ul = $('#projectList');
+    var ul = $('#projectList'), filters = $('#projectFilters'), search = $('#projectSearch'), result = $('#projectResultCount');
     if (!ul || !D.projects) return;
+    var activeCategory = 'Alle';
+    function normalized(value) {
+      return String(value || '').toLocaleLowerCase('de').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
     ul.innerHTML = D.projects.map(function (p) {
       var tags = p.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('');
       var detailList = (p.details || []).map(function (line) { return '<li>' + esc(line) + '</li>'; }).join('');
+      var category = p.category || 'Weitere';
+      var searchable = normalized([p.title, p.desc, p.category, (p.tags || []).join(' '), (p.details || []).join(' ')].join(' '));
       var details = detailList ? '<details class="project-details"><summary>Projekt-Details ansehen</summary><div class="project-detail-content"><ul>' + detailList + '</ul>' +
         (p.url ? '<a class="project-detail-link" href="' + esc(p.url) + '" target="_blank" rel="noopener">' + esc(p.linkLabel || 'Projekt öffnen') + ' ↗</a>' : '') +
         '</div></details>' : '';
       if (p.title === 'Audi-Autohaus-Website') {
-        return '<li class="reveal project-audi"><div class="audi-montage" id="audiMontage">' +
+        return '<li class="reveal project-audi" data-category="' + esc(category) + '" data-search="' + esc(searchable) + '"><div class="audi-montage" id="audiMontage">' +
           '<canvas id="audiMontageCanvas" aria-label="3D-Montage: Das originale Audi-RS-6-Modell setzt sich aus bewegten Bauteilen zusammen."></canvas>' +
           '<div class="audi-loading" id="audiLoading" role="status" aria-live="polite"><span class="audi-spinner" aria-hidden="true"></span><span id="audiLoadingCopy">Der Audi RS 6 wird in den Showroom geladen …</span></div>' +
           '<div class="audi-montage-glow" aria-hidden="true"></div>' +
@@ -487,8 +595,34 @@
           '<span class="audi-hint" aria-hidden="true">Ziehen zum Drehen <span>↔</span></span></div>' +
           '<div class="project-audi-copy"><div><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p>' + details + '</div><div class="tags">' + tags + '</div></div></li>';
       }
-      return '<li class="reveal project-has-details"><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><div class="tags">' + tags + '</div>' + details + '</li>';
+      return '<li class="reveal project-has-details" data-category="' + esc(category) + '" data-search="' + esc(searchable) + '"><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><div class="tags">' + tags + '</div>' + details + '</li>';
     }).join('');
+    var categories = ['Alle'].concat(Array.from(new Set(D.projects.map(function (p) { return p.category || 'Weitere'; }))));
+    function applyProjectFilters() {
+      var query = normalized(search ? search.value.trim() : ''), visible = 0;
+      $$('.project-list > li', ul).forEach(function (item) {
+        var categoryMatch = activeCategory === 'Alle' || item.dataset.category === activeCategory;
+        var queryMatch = !query || (item.dataset.search || '').indexOf(query) !== -1;
+        var show = categoryMatch && queryMatch;
+        item.classList.toggle('project-filtered-out', !show);
+        if (show) visible++;
+      });
+      if (result) result.textContent = visible === 0 ? 'Keine passenden Projekte gefunden.' : visible + (visible === 1 ? ' Projekt' : ' Projekte');
+    }
+    if (filters) {
+      filters.innerHTML = categories.map(function (category, index) {
+        return '<button type="button" class="chip project-filter" data-project-category="' + esc(category) + '" aria-pressed="' + (index === 0 ? 'true' : 'false') + '">' + esc(category) + '</button>';
+      }).join('');
+      $$('.project-filter', filters).forEach(function (button) {
+        button.addEventListener('click', function () {
+          activeCategory = button.dataset.projectCategory;
+          $$('.project-filter', filters).forEach(function (item) { item.setAttribute('aria-pressed', item === button ? 'true' : 'false'); });
+          applyProjectFilters();
+        });
+      });
+    }
+    if (search) search.addEventListener('input', applyProjectFilters);
+    applyProjectFilters();
     if (window.PE_AUDI_MONTAGE) window.PE_AUDI_MONTAGE.init();
   }
 
@@ -828,8 +962,13 @@
 
   /* ───────────── Start ───────────── */
   function boot() {
+    initPageLoader();
     initTitle();
     initThemeStudio();
+    initSoundEffects();
+    initDuckInteraction();
+    initVisitorCounter();
+    initScrollTop();
     initRipples();
     initEyes();
     initEasterEgg();
