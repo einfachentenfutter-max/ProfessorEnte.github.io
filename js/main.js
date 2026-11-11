@@ -262,13 +262,6 @@
       var context = visualizer.getContext('2d');
       var width = visualizer.width, height = visualizer.height, bars = 28;
       analyser.getByteFrequencyData(frequencyData);
-      var energy = 0;
-      for (var e = 0; e < frequencyData.length; e++) energy += frequencyData[e];
-      energy = energy / Math.max(1, frequencyData.length) / 255;
-      document.documentElement.style.setProperty('--music-energy', energy.toFixed(3));
-      document.documentElement.style.setProperty('--music-scale', (1 + energy * .6).toFixed(3));
-      document.documentElement.style.setProperty('--music-glow', Math.round(6 + energy * 32) + 'px');
-      document.documentElement.style.setProperty('--music-speed', (1 - energy * .45).toFixed(2) + 's');
       context.clearRect(0, 0, width, height);
       var slot = width / bars, barWidth = Math.max(2, slot * .62);
       for (var i = 0; i < bars; i++) {
@@ -288,10 +281,6 @@
     }
     function stopVisualizer() {
       cancelAnimationFrame(visualizerFrame);
-      document.documentElement.style.setProperty('--music-energy', '0');
-      document.documentElement.style.setProperty('--music-scale', '1');
-      document.documentElement.style.setProperty('--music-glow', '6px');
-      document.documentElement.style.setProperty('--music-speed', '1s');
       if (visualizer) { var context = visualizer.getContext('2d'); context.clearRect(0, 0, visualizer.width, visualizer.height); }
       if (visualizerStatus) visualizerStatus.textContent = 'Visualizer pausiert.';
     }
@@ -950,22 +939,7 @@
   }
 
   function initFunFeatures() {
-    var buddy = $('#duckBuddy'), confetti = $('#confettiLayer'), confettiButton = $('#confettiToggle');
-    var lastPointer = 0;
-    if (buddy) {
-      window.addEventListener('pointermove', function (event) {
-        if (event.pointerType === 'touch' || reduce || Date.now() - lastPointer < 24) return;
-        lastPointer = Date.now();
-        buddy.style.setProperty('--buddy-x', Math.min(innerWidth - 52, Math.max(8, event.clientX + 16)) + 'px');
-        buddy.style.setProperty('--buddy-y', Math.min(innerHeight - 52, Math.max(104, event.clientY + 16)) + 'px');
-      }, { passive: true });
-      window.addEventListener('scroll', function () {
-        if (matchMedia('(pointer: coarse)').matches) {
-          var max = document.documentElement.scrollHeight - innerHeight;
-          buddy.style.setProperty('--buddy-y', (104 + (max > 0 ? scrollY / max : 0) * Math.max(0, innerHeight - 158)) + 'px');
-        }
-      }, { passive: true });
-    }
+    var confetti = $('#confettiLayer'), confettiButton = $('#confettiToggle');
     if (confettiButton && confetti) confettiButton.addEventListener('click', function () {
       if (reduce) { confettiButton.querySelector('span').textContent = 'Bewegung ist reduziert'; return; }
       var icons = ['🦆', '✨', '🎉', '🐤', '💛'];
