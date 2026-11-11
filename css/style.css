@@ -936,7 +936,7 @@ html.reduce-motion, html.reduce-motion * { scroll-behavior:auto !important; anim
 /* Neue, optionale Website-Erlebnisse */
 .atmosphere-controls { margin-top:18px; padding-top:14px; border-top:1px solid rgba(11,34,39,.12); }
 .atmosphere-controls h3 { margin:0 0 10px; font-size:.9rem; }
-.duck-buddy { position:fixed; z-index:800; left:var(--buddy-x,calc(100vw - 66px)); top:var(--buddy-y,45vh); font-size:2rem; pointer-events:none; filter:drop-shadow(0 6px 8px rgba(11,34,39,.2)); transition:left .22s ease-out,top .22s ease-out; animation:buddy-bob 1.5s ease-in-out infinite; }
+.duck-buddy { position:fixed; z-index:45; left:var(--buddy-x,calc(100vw - 66px)); top:var(--buddy-y,45vh); font-size:2rem; pointer-events:none; filter:drop-shadow(0 6px 8px rgba(11,34,39,.2)); transition:left .22s ease-out,top .22s ease-out; animation:buddy-bob 1.5s ease-in-out infinite; }
 @keyframes buddy-bob { 50% { transform:translateY(-8px) rotate(-8deg); } }
 .music-reactive-duck { position:absolute; z-index:2; top:12%; left:50%; text-align:center; font-size:clamp(2rem,6vw,5rem); opacity:0; transform:translateX(-50%) scale(var(--music-scale,1)); filter:drop-shadow(0 0 var(--music-glow,6px) #ffd75e); transition:opacity .5s,transform .12s; pointer-events:none; }
 .hero.music-playing .music-reactive-duck { opacity:.92; animation:music-duck-dance var(--music-speed,1s) ease-in-out infinite alternate; }

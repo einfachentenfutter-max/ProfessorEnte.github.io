@@ -957,12 +957,12 @@
         if (event.pointerType === 'touch' || reduce || Date.now() - lastPointer < 24) return;
         lastPointer = Date.now();
         buddy.style.setProperty('--buddy-x', Math.min(innerWidth - 52, Math.max(8, event.clientX + 16)) + 'px');
-        buddy.style.setProperty('--buddy-y', Math.min(innerHeight - 52, Math.max(8, event.clientY + 16)) + 'px');
+        buddy.style.setProperty('--buddy-y', Math.min(innerHeight - 52, Math.max(104, event.clientY + 16)) + 'px');
       }, { passive: true });
       window.addEventListener('scroll', function () {
         if (matchMedia('(pointer: coarse)').matches) {
           var max = document.documentElement.scrollHeight - innerHeight;
-          buddy.style.setProperty('--buddy-y', (16 + (max > 0 ? scrollY / max : 0) * Math.max(0, innerHeight - 70)) + 'px');
+          buddy.style.setProperty('--buddy-y', (104 + (max > 0 ? scrollY / max : 0) * Math.max(0, innerHeight - 158)) + 'px');
         }
       }, { passive: true });
     }
