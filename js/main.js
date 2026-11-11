@@ -262,6 +262,13 @@
       var context = visualizer.getContext('2d');
       var width = visualizer.width, height = visualizer.height, bars = 28;
       analyser.getByteFrequencyData(frequencyData);
+      var energy = 0;
+      for (var e = 0; e < frequencyData.length; e++) energy += frequencyData[e];
+      energy = energy / Math.max(1, frequencyData.length) / 255;
+      document.documentElement.style.setProperty('--music-energy', energy.toFixed(3));
+      document.documentElement.style.setProperty('--music-scale', (1 + energy * .6).toFixed(3));
+      document.documentElement.style.setProperty('--music-glow', Math.round(6 + energy * 32) + 'px');
+      document.documentElement.style.setProperty('--music-speed', (1 - energy * .45).toFixed(2) + 's');
       context.clearRect(0, 0, width, height);
       var slot = width / bars, barWidth = Math.max(2, slot * .62);
       for (var i = 0; i < bars; i++) {
@@ -281,6 +288,10 @@
     }
     function stopVisualizer() {
       cancelAnimationFrame(visualizerFrame);
+      document.documentElement.style.setProperty('--music-energy', '0');
+      document.documentElement.style.setProperty('--music-scale', '1');
+      document.documentElement.style.setProperty('--music-glow', '6px');
+      document.documentElement.style.setProperty('--music-speed', '1s');
       if (visualizer) { var context = visualizer.getContext('2d'); context.clearRect(0, 0, visualizer.width, visualizer.height); }
       if (visualizerStatus) visualizerStatus.textContent = 'Visualizer pausiert.';
     }
@@ -688,9 +699,9 @@
           '<button class="audi-replay" id="audiReplay" type="button"><span aria-hidden="true">↻</span> Montage neu starten</button></div></div>' +
           '<div class="audi-montage-bottom"><div><span class="audi-index">01 / QUATTRO</span><h3>Audi, Stück für Stück.</h3><p>Der RS 6. Neu zusammengesetzt im Raum.</p></div></div>' +
           '<span class="audi-hint" aria-hidden="true">Ziehen zum Drehen <span>↔</span></span></div>' +
-          '<div class="project-audi-copy"><div><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p>' + details + '</div><div class="tags">' + tags + '</div></div></li>';
+          '<div class="project-audi-copy"><div><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><button class="project-narrate" type="button" data-narrate="' + esc(p.title + '. ' + p.desc) + '">🎧 Projekt anhören</button>' + details + '</div><div class="tags">' + tags + '</div></div></li>';
       }
-      return '<li class="reveal project-has-details" data-category="' + esc(category) + '" data-search="' + esc(searchable) + '"><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><div class="tags">' + tags + '</div>' + details + '</li>';
+      return '<li class="reveal project-has-details" data-category="' + esc(category) + '" data-search="' + esc(searchable) + '"><h3>' + esc(p.title) + '</h3><p>' + esc(p.desc) + '</p><button class="project-narrate" type="button" data-narrate="' + esc(p.title + '. ' + p.desc) + '">🎧 Projekt anhören</button><div class="tags">' + tags + '</div>' + details + '</li>';
     }).join('');
     var categories = ['Alle'].concat(Array.from(new Set(D.projects.map(function (p) { return p.category || 'Weitere'; }))));
     function applyProjectFilters() {
@@ -717,6 +728,17 @@
       });
     }
     if (search) search.addEventListener('input', applyProjectFilters);
+    ul.addEventListener('click', function (event) {
+      var button = event.target.closest('.project-narrate');
+      if (!button) return;
+      if (!('speechSynthesis' in window)) { button.textContent = 'Sprachausgabe nicht verfügbar'; return; }
+      window.speechSynthesis.cancel();
+      $$('.project-narrate.is-speaking', ul).forEach(function (b) { b.classList.remove('is-speaking'); b.textContent = '🎧 Projekt anhören'; });
+      var utterance = new SpeechSynthesisUtterance(button.dataset.narrate);
+      utterance.lang = 'de-DE'; button.classList.add('is-speaking'); button.textContent = '🔊 Wird erzählt …';
+      utterance.onend = utterance.onerror = function () { button.classList.remove('is-speaking'); button.textContent = '🎧 Projekt anhören'; };
+      window.speechSynthesis.speak(utterance);
+    });
     applyProjectFilters();
     if (window.PE_AUDI_MONTAGE) window.PE_AUDI_MONTAGE.init();
   }
@@ -850,6 +872,11 @@
     var layer = $('#seasonEffects');
     var activeEffect = '';
     var rainTimer = 0;
+    var seasonChoice = $('#seasonChoice'), eventChoice = $('#eventChoice');
+    var manualSeason = 'auto', manualEvent = 'auto';
+    try { manualSeason = localStorage.getItem('professorente-season-choice') || 'auto'; manualEvent = localStorage.getItem('professorente-event-choice') || 'auto'; } catch (_) {}
+    if (seasonChoice) seasonChoice.value = manualSeason;
+    if (eventChoice) eventChoice.value = manualEvent;
     var effects = {
       autumn: ['🍂', '🍁', '🍃'], winter: ['❄️', '❄️', '✨'], spring: ['🌸', '🌼', '🌷'], summer: ['✨', '☀️', '🫧'],
       halloween: ['🎃', '🦇', '👻'], nikolaus: ['⭐', '🍫', '🎁'], christmas: ['❄️', '⭐', '🎄'], easter: ['🥚', '🐰', '🐣'], newyear: ['🎆', '✨', '⭐'], valentines: ['💖', '🌹', '✨']
@@ -880,6 +907,8 @@
       else if (month === 12 && day === 31 || month === 1 && day === 1) celebration = 'newyear';
       else if (month === 2 && day === 14) celebration = 'valentines';
       else if (date >= easterStart && date <= easterEnd) celebration = 'easter';
+      if (manualSeason !== 'auto') season = manualSeason;
+      if (manualEvent !== 'auto') celebration = manualEvent;
       var daypart = hour >= 5 && hour < 10 ? 'morning' : hour >= 10 && hour < 17 ? 'day' : hour >= 17 && hour < 21 ? 'evening' : 'night';
       document.body.dataset.season = season;
       document.body.dataset.celebration = celebration;
@@ -910,12 +939,94 @@
       rainTimer = setInterval(drop, celebration === 'none' ? 1150 : 850);
     }
     update();
+    if (seasonChoice) seasonChoice.addEventListener('change', function () { manualSeason = seasonChoice.value; try { localStorage.setItem('professorente-season-choice', manualSeason); } catch (_) {} activeEffect = ''; update(); });
+    if (eventChoice) eventChoice.addEventListener('change', function () { manualEvent = eventChoice.value; try { localStorage.setItem('professorente-event-choice', manualEvent); } catch (_) {} activeEffect = ''; update(); });
     window.addEventListener('pe:reducedmotion', function () {
       clearInterval(rainTimer);
       if (reduce) { activeEffect = ''; if (layer) layer.replaceChildren(); }
       else { activeEffect = ''; update(); }
     });
     setInterval(update, 5 * 60 * 1000);
+  }
+
+  function initFunFeatures() {
+    var buddy = $('#duckBuddy'), confetti = $('#confettiLayer'), confettiButton = $('#confettiToggle');
+    var lastPointer = 0;
+    if (buddy) {
+      window.addEventListener('pointermove', function (event) {
+        if (event.pointerType === 'touch' || reduce || Date.now() - lastPointer < 24) return;
+        lastPointer = Date.now();
+        buddy.style.setProperty('--buddy-x', Math.min(innerWidth - 52, Math.max(8, event.clientX + 16)) + 'px');
+        buddy.style.setProperty('--buddy-y', Math.min(innerHeight - 52, Math.max(8, event.clientY + 16)) + 'px');
+      }, { passive: true });
+      window.addEventListener('scroll', function () {
+        if (matchMedia('(pointer: coarse)').matches) {
+          var max = document.documentElement.scrollHeight - innerHeight;
+          buddy.style.setProperty('--buddy-y', (16 + (max > 0 ? scrollY / max : 0) * Math.max(0, innerHeight - 70)) + 'px');
+        }
+      }, { passive: true });
+    }
+    if (confettiButton && confetti) confettiButton.addEventListener('click', function () {
+      if (reduce) { confettiButton.querySelector('span').textContent = 'Bewegung ist reduziert'; return; }
+      var icons = ['🦆', '✨', '🎉', '🐤', '💛'];
+      for (var i = 0; i < 30; i++) {
+        var bit = document.createElement('span'); bit.textContent = icons[Math.floor(Math.random() * icons.length)];
+        bit.style.setProperty('--x', Math.random() * 100 + 'vw'); bit.style.setProperty('--delay', Math.random() * .8 + 's'); bit.style.setProperty('--fall', 2 + Math.random() * 2 + 's');
+        confetti.appendChild(bit); bit.addEventListener('animationend', function () { this.remove(); }, { once: true });
+      }
+      confettiButton.querySelector('span').textContent = 'Noch mal!';
+    });
+    $$('.timeline-stop').forEach(function (button) {
+      button.addEventListener('click', function () {
+        $$('.timeline-stop').forEach(function (item) { item.setAttribute('aria-expanded', item === button ? 'true' : 'false'); });
+      });
+    });
+    initDailyChallenge();
+    initDuckQuiz();
+    initSecretDuckGame();
+  }
+
+  function initDailyChallenge() {
+    var text = $('#dailyChallengeText'), progress = $('#dailyChallengeProgress'); if (!text || !progress) return;
+    var berlinDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+    var day = Math.floor(new Date(berlinDate + 'T12:00:00').getTime() / 86400000);
+    var duckKey = 'professorente-ducks-today-' + berlinDate, quizKey = 'professorente-quiz-today-' + berlinDate, sectionKey = 'professorente-sections-' + berlinDate;
+    window.addEventListener('pe:ducks', function () { try { localStorage.setItem(duckKey, String(Number(localStorage.getItem(duckKey) || 0) + 1)); } catch (_) {} });
+    var tasks = [
+      { title: 'Sammle heute 2 versteckte Enten.', event: 'pe:ducks', goal: 2, count: function () { return Number(localStorage.getItem(duckKey) || 0); } },
+      { title: 'Beantworte heute 2 Quizfragen richtig.', event: 'pe:quiz-correct', goal: 2, count: function () { return Number(localStorage.getItem(quizKey) || 0); } },
+      { title: 'Entdecke heute 4 Bereiche der Website.', event: 'pe:section-visit', goal: 4, count: function () { try { return JSON.parse(sessionStorage.getItem(sectionKey) || '[]').length; } catch (_) { return 0; } } }
+    ];
+    var task = tasks[((day % tasks.length) + tasks.length) % tasks.length];
+    function update() { var value = Math.min(task.goal, task.count()); text.textContent = task.title + (value >= task.goal ? ' Geschafft! 🏅' : ''); progress.textContent = value + ' / ' + task.goal; }
+    window.addEventListener(task.event, update); window.addEventListener('storage', update); update();
+  }
+
+  function initDuckQuiz() {
+    var question = $('#quizQuestion'), answers = $('#quizAnswers'), feedback = $('#quizFeedback'), scoreEl = $('#quizScore'); if (!question || !answers) return;
+    var questions = [
+      { q: 'Welcher Server ist als aktueller FiveM-Server verlinkt?', a: ['Strausberg Roleplay', 'Hamburg Roleplay', 'ProfessorEnte RP'], correct: 1 },
+      { q: 'In welcher Region liegen die auf der Karte gezeigten Orte?', a: ['Bayern', 'Brandenburg', 'Sachsen'], correct: 1 },
+      { q: 'Wie heißt das Spielprojekt mit dem eigenen Audi-Showroom?', a: ['Duck Racer', 'Audi-Autohaus-Website', 'EKG Simulator'], correct: 1 },
+      { q: 'Wofür steht DRK?', a: ['Deutscher Rettungsklub', 'Deutsches Rotes Kreuz', 'Direkter Kontakt'], correct: 1 },
+      { q: 'Welches Sammelspiel gibt es auf der Website?', a: ['Fische zählen', 'Sterne sortieren', 'Versteckte Enten finden'], correct: 2 }
+    ];
+    var index = Math.floor(Date.now() / 86400000) % questions.length, score = 0, locked = false;
+    var berlinDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+    try { score = Number(localStorage.getItem('professorente-quiz-score') || 0); } catch (_) {}
+    function render() { var item = questions[index]; question.textContent = item.q; answers.replaceChildren(); locked = false; feedback.textContent = ''; item.a.forEach(function (label, i) { var button = document.createElement('button'); button.type = 'button'; button.className = 'quiz-answer'; button.textContent = label; button.addEventListener('click', function () { if (locked) return; locked = true; if (i === item.correct) { score++; scoreEl.textContent = score; feedback.textContent = 'Richtig! Ein Entenpunkt für dich. 🦆'; try { localStorage.setItem('professorente-quiz-score', score); var key = 'professorente-quiz-today-' + berlinDate; var count = Number(localStorage.getItem(key) || 0) + 1; localStorage.setItem(key, count); } catch (_) {} window.dispatchEvent(new Event('pe:quiz-correct')); } else feedback.textContent = 'Fast! Die richtige Antwort war: ' + item.a[item.correct] + '.'; window.dispatchEvent(new Event('pe:quiz-answer')); button.classList.add(i === item.correct ? 'is-correct' : 'is-wrong'); setTimeout(function () { index = (index + 1) % questions.length; render(); }, 1300); }); answers.appendChild(button); }); }
+    scoreEl.textContent = score; render();
+  }
+
+  function initSecretDuckGame() {
+    var modal = $('#duckGame'), target = $('#duckGameTarget'), status = $('#duckGameStatus'); if (!modal || !target) return;
+    var typed = '', timer = 0, seconds = 10, hits = 0;
+    function close() { clearInterval(timer); modal.hidden = true; modal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('egg-open'); }
+    function open() { modal.hidden = false; modal.setAttribute('aria-hidden', 'false'); document.body.classList.add('egg-open'); seconds = 10; hits = 0; placeTarget(); status.textContent = '10 Sekunden · 0 Treffer'; target.focus(); clearInterval(timer); timer = setInterval(function () { seconds--; status.textContent = seconds + ' Sekunden · ' + hits + ' Treffer'; if (seconds <= 0) { clearInterval(timer); status.textContent = 'Zeit vorbei! ' + hits + ' Enten gefangen. 🦆'; } }, 1000); }
+    function placeTarget() { target.style.left = (8 + Math.random() * 76) + '%'; target.style.top = (38 + Math.random() * 48) + '%'; }
+    document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && !modal.hidden) close(); if (event.target.closest && event.target.closest('input,textarea,select,[contenteditable="true"]')) return; if (event.key.length === 1) { typed = (typed + event.key.toUpperCase()).slice(-4); if (typed === 'ENTE') { typed = ''; open(); } } });
+    target.addEventListener('click', function () { if (seconds <= 0) return; hits++; status.textContent = seconds + ' Sekunden · ' + hits + ' Treffer'; placeTarget(); });
+    $$('[data-game-close]', modal).forEach(function (el) { el.addEventListener('click', close); });
   }
 
   function initDuckHunt() {
@@ -981,6 +1092,9 @@
       if (footerCount) footerCount.textContent = count + ' / 4';
     }
     function markVisited(id) {
+      var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+      try { var daily = JSON.parse(sessionStorage.getItem('professorente-sections-' + today) || '[]'); if (daily.indexOf(id) < 0) daily.push(id); sessionStorage.setItem('professorente-sections-' + today, JSON.stringify(daily)); } catch (_) {}
+      window.dispatchEvent(new Event('pe:section-visit'));
       if (visited.has(id)) return;
       visited.add(id);
       try { localStorage.setItem('professorente-visited-sections', JSON.stringify(Array.from(visited))); } catch (_) {}
@@ -1354,6 +1468,7 @@
     initSoundEffects();
     initDuckInteraction();
     initAtmosphere();
+    initFunFeatures();
     initDuckHunt();
     initAchievements();
     initScrollTop();

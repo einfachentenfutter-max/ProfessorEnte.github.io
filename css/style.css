@@ -932,3 +932,56 @@ html.reduce-motion, html.reduce-motion * { scroll-behavior:auto !important; anim
 .legal-incomplete { max-width:78ch; margin:24px 0; padding:16px 18px; border:1px solid #b86b00; border-radius:14px; color:#392300; background:#fff1cb; }
 .legal-source { margin-top:28px; font-size:.85rem; }
 .map-deactivate { margin:10px; padding:7px 11px; border:1px solid var(--mist-deep); border-radius:10px; color:var(--ink); background:var(--paper); font-size:.78rem; font-weight:700; } .map-deactivate[hidden] { display:none; }
+
+/* Neue, optionale Website-Erlebnisse */
+.atmosphere-controls { margin-top:18px; padding-top:14px; border-top:1px solid rgba(11,34,39,.12); }
+.atmosphere-controls h3 { margin:0 0 10px; font-size:.9rem; }
+.duck-buddy { position:fixed; z-index:800; left:var(--buddy-x,calc(100vw - 66px)); top:var(--buddy-y,45vh); font-size:2rem; pointer-events:none; filter:drop-shadow(0 6px 8px rgba(11,34,39,.2)); transition:left .22s ease-out,top .22s ease-out; animation:buddy-bob 1.5s ease-in-out infinite; }
+@keyframes buddy-bob { 50% { transform:translateY(-8px) rotate(-8deg); } }
+.music-reactive-duck { position:absolute; z-index:2; top:12%; left:50%; text-align:center; font-size:clamp(2rem,6vw,5rem); opacity:0; transform:translateX(-50%) scale(var(--music-scale,1)); filter:drop-shadow(0 0 var(--music-glow,6px) #ffd75e); transition:opacity .5s,transform .12s; pointer-events:none; }
+.hero.music-playing .music-reactive-duck { opacity:.92; animation:music-duck-dance var(--music-speed,1s) ease-in-out infinite alternate; }
+@keyframes music-duck-dance { to { translate:0 -14px; rotate:8deg; } }
+.confetti-layer { position:fixed; z-index:1200; inset:0; overflow:hidden; pointer-events:none; }
+.confetti-layer span { position:absolute; top:-3rem; left:var(--x); font-size:1.6rem; animation:confetti-fall var(--fall) var(--delay) ease-in forwards; }
+@keyframes confetti-fall { to { transform:translate3d(8vw,110vh,0) rotate(540deg); opacity:.15; } }
+.timeline-section { background:var(--paper); }
+.timeline-list { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin:34px 0 0; padding:0; list-style:none; }
+.timeline-list li { position:relative; padding:16px; border:1px solid rgba(11,34,39,.12); border-radius:18px; background:var(--mist); }
+.timeline-list li:before { position:absolute; content:""; top:33px; left:0; right:0; height:2px; background:var(--pond-400); opacity:.45; }
+.timeline-stop { position:relative; display:grid; gap:7px; width:100%; min-height:94px; padding:0; border:0; color:var(--ink); background:transparent; text-align:left; cursor:pointer; }
+.timeline-stop span { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; color:white; background:var(--pond-600); font-weight:800; }
+.timeline-stop strong { font-family:var(--font-display); font-size:1rem; }
+.timeline-stop small,.timeline-list li p { color:var(--slate); font-size:.8rem; }
+.timeline-list li p { display:none; margin:12px 0 0; line-height:1.5; }
+.timeline-stop[aria-expanded="true"] span { background:#e49a20; box-shadow:0 0 0 5px rgba(244,182,58,.2); }
+.timeline-stop[aria-expanded="true"] + p { display:block; animation:feature-in .3s ease both; }
+.daily-challenge,.quiz-card { margin-top:22px; padding:22px; border:1px solid rgba(11,34,39,.12); border-radius:22px; background:var(--paper); box-shadow:0 14px 35px rgba(11,34,39,.06); }
+.daily-challenge { display:flex; align-items:center; justify-content:space-between; gap:18px; }
+.daily-challenge h3,.quiz-card h2 { margin:4px 0 6px; font-family:var(--font-display); }
+.daily-challenge p:not(.eyebrow) { margin:0; color:var(--slate); }
+.daily-challenge > strong { flex:none; padding:12px 16px; border-radius:14px; color:var(--ink); background:#fff0c9; }
+.quiz-card { max-width:720px; }
+.quiz-question { font-size:1.1rem; font-weight:750; }
+.quiz-answers { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.quiz-answer,.project-narrate { padding:10px 14px; border:1px solid rgba(11,34,39,.14); border-radius:12px; color:var(--ink); background:var(--mist); font:inherit; font-weight:700; cursor:pointer; transition:transform .2s,border-color .2s,background .2s; }
+.quiz-answer:hover,.project-narrate:hover { transform:translateY(-2px); border-color:var(--pond-600); }
+.quiz-answer.is-correct { color:#15552b; background:#d9f6df; }
+.quiz-answer.is-wrong { color:#812d25; background:#ffe0d9; }
+.quiz-feedback { min-height:1.5em; color:var(--pond-600); font-weight:700; }
+.quiz-score { margin-bottom:0; }
+.project-narrate { margin:8px 0; font-size:.82rem; }
+.project-narrate.is-speaking { animation:narrate-pulse .7s ease-in-out infinite alternate; }
+@keyframes narrate-pulse { to { box-shadow:0 0 0 5px rgba(47,122,133,.18); } }
+.duck-game { position:fixed; z-index:2000; inset:0; display:grid; place-items:center; padding:20px; }
+.duck-game[hidden] { display:none; }
+.duck-game-backdrop { position:absolute; inset:0; background:rgba(5,20,24,.78); backdrop-filter:blur(8px); }
+.duck-game-card { position:relative; width:min(680px,100%); height:min(520px,80vh); overflow:hidden; padding:26px; border:1px solid rgba(244,182,58,.5); border-radius:24px; color:var(--ink); background:var(--paper); box-shadow:0 24px 80px #0008; }
+.duck-game-card h2 { margin:4px 0; font-family:var(--font-display); }
+.duck-game-close { position:absolute; z-index:2; top:10px; right:14px; border:0; color:var(--ink); background:transparent; font-size:2rem; cursor:pointer; }
+.duck-game-status { font-weight:800; }
+.duck-game-target { position:absolute; left:40%; top:52%; padding:10px; border:0; border-radius:50%; background:#fff0c9; font-size:2.4rem; cursor:pointer; transition:left .15s,top .15s; }
+@keyframes feature-in { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:none; } }
+@media(max-width:850px) { .timeline-list { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:560px) { .timeline-list,.quiz-answers { grid-template-columns:1fr; } .daily-challenge { align-items:flex-start; } .daily-challenge > strong { padding:9px; } .duck-buddy { font-size:1.6rem; } }
+@media(prefers-reduced-motion:reduce) { .duck-buddy,.music-reactive-duck,.confetti-layer span,.project-narrate.is-speaking { animation:none!important; transition:none!important; } }
+html.reduce-motion .duck-buddy,html.reduce-motion .music-reactive-duck,html.reduce-motion .confetti-layer span,html.reduce-motion .project-narrate.is-speaking { animation:none!important; transition:none!important; }

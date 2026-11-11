@@ -15,7 +15,7 @@
   <meta name="theme-color" content="#10333A">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
-  <link rel="stylesheet" href="css/style.css?v=20261111-legal1">
+  <link rel="stylesheet" href="css/style.css?v=20261111-features1">
   <script>document.documentElement.classList.add('has-site-loader');</script>
   <script type="importmap">
     {"imports":{"three":"assets/vendor/three/three.module.js","three/addons/":"assets/vendor/three/addons/"}}
@@ -73,16 +73,25 @@
       <button class="accessibility-toggle" id="contrastToggle" type="button" aria-pressed="false">Hoher Kontrast <span>Aus</span></button>
       <button class="accessibility-toggle" id="motionToggle" type="button" aria-pressed="false">Bewegung reduzieren <span>Aus</span></button>
     </div>
+    <div class="atmosphere-controls" aria-labelledby="atmosphereTitle">
+      <h3 id="atmosphereTitle">Jahreszeit &amp; Feste</h3>
+      <label class="accessibility-field" for="seasonChoice"><span>Jahreszeit</span><select id="seasonChoice"><option value="auto">Automatisch</option><option value="spring">Frühling</option><option value="summer">Sommer</option><option value="autumn">Herbst</option><option value="winter">Winter</option></select></label>
+      <label class="accessibility-field" for="eventChoice"><span>Eventeffekt</span><select id="eventChoice"><option value="auto">Automatisch</option><option value="none">Aus</option><option value="halloween">Halloween</option><option value="nikolaus">Nikolaus</option><option value="christmas">Weihnachten</option><option value="easter">Ostern</option><option value="newyear">Silvester</option><option value="valentines">Valentinstag</option></select></label>
+      <button type="button" class="accessibility-toggle" id="confettiToggle">🎉 Enten-Konfetti <span>Los!</span></button>
+    </div>
   </section>
 </div>
 <div class="duck-rain" id="duckRain" aria-hidden="true"></div>
 <div class="season-effects" id="seasonEffects" aria-hidden="true"></div>
+<div class="duck-buddy" id="duckBuddy" aria-hidden="true">🦆</div>
+<div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
 
 <main id="top">
 
   <!-- HERO -->
   <section class="hero" id="hero">
     <div class="galaxy-backdrop" id="galaxyBackdrop" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="music-reactive-duck" id="musicReactiveDuck" aria-hidden="true">🦆</div>
     <video class="music-video-backdrop" id="musicVideoBackdrop" muted loop playsinline preload="none" aria-hidden="true">
       <source src="assets/music/discobitch-background.mp4" type="video/mp4">
     </video>
@@ -366,6 +375,16 @@
     </div>
   </section>
 
+  <section class="section timeline-section" id="mein-weg">
+    <div class="container"><p class="eyebrow reveal">MEIN WEG</p><h2 class="h2 reveal-clip">Neugier wird zu Projekten.</h2><p class="section-lead reveal">Wähle eine Station und entdecke, was mich daran begeistert.</p><ol class="timeline-list" id="timelineList">
+      <li><button type="button" class="timeline-stop" aria-expanded="true"><span>01</span><strong>Technik verstehen</strong><small>Neugier auf das Innenleben</small></button><p>Ich möchte nicht nur wissen, dass etwas funktioniert, sondern auch verstehen, warum.</p></li>
+      <li><button type="button" class="timeline-stop" aria-expanded="false"><span>02</span><strong>Eigene Ideen bauen</strong><small>Programmieren &amp; gestalten</small></button><p>Aus Ideen werden eigene Websites, Spiele und technische Projekte.</p></li>
+      <li><button type="button" class="timeline-stop" aria-expanded="false"><span>03</span><strong>FiveM &amp; Community</strong><small>Server, Scripts und Zusammenarbeit</small></button><p>Bei FiveM verbinde ich Entwicklung mit Teamarbeit und Community.</p></li>
+      <li><button type="button" class="timeline-stop" aria-expanded="false"><span>04</span><strong>DRK &amp; Verantwortung</strong><small>Helfen und gemeinsam handeln</small></button><p>Mein Engagement beim DRK stärkt Verantwortungsbewusstsein und Zusammenarbeit.</p></li>
+      <li><button type="button" class="timeline-stop" aria-expanded="false"><span>05</span><strong>Weiterlernen</strong><small>Immer neue Herausforderungen</small></button><p>Ich probiere weiter Neues aus und entwickle meine Fähigkeiten Schritt für Schritt.</p></li>
+    </ol></div>
+  </section>
+
   <!-- PRIVATES ÜBER MICH -->
   <section class="section private-section" id="privates">
     <div class="container">
@@ -454,6 +473,8 @@
         </ul>
         <p class="achievement-progress" id="achievementProgress" aria-live="polite">0 von 4 Abzeichen freigeschaltet</p>
       </section>
+      <div class="daily-challenge reveal" id="dailyChallenge" aria-live="polite"><div><p class="eyebrow">HEUTE AUF DER WEBSITE</p><h3>Tages-Challenge</h3><p id="dailyChallengeText">Deine Aufgabe wird geladen …</p></div><strong id="dailyChallengeProgress">0 / 0</strong></div>
+      <section class="quiz-card reveal" id="duckQuiz" aria-labelledby="quizTitle"><p class="eyebrow">ENTENWISSEN</p><h2 id="quizTitle">Das ProfessorEnte-Quiz</h2><p class="quiz-question" id="quizQuestion"></p><div class="quiz-answers" id="quizAnswers" role="group" aria-label="Antwortmöglichkeiten"></div><p class="quiz-feedback" id="quizFeedback" aria-live="polite"></p><p class="quiz-score">🦆 Entenpunkte: <strong id="quizScore">0</strong></p></section>
     </div>
   </section>
 
@@ -464,6 +485,7 @@
       <h2 class="h2 reveal-clip">Was sich getan hat.</h2>
       <p class="section-lead reveal">Ein kurzer Überblick über die letzten Ergänzungen.</p>
       <ol class="updates-list">
+        <li class="update-card reveal"><time datetime="2026-11-11">11. November 2026</time><h3>Neue Enten-Abenteuer</h3><p>Maus-Ente, Musik-Tanz, Quiz, Tages-Challenge, Projekt-Sprachausgabe, Konfetti, Zeitlinie, Geheimspiel und manuelle Saison- und Festmodi.</p></li>
         <li class="update-card reveal"><time datetime="2026-11-11">11. November 2026</time><h3>Bedienhilfen &amp; Abzeichen</h3><p>Schriftgröße, Kontrast und Bewegung lassen sich einstellen. Für Enten, besuchte Bereiche und das Easter Egg gibt es Sammelabzeichen.</p></li>
         <li class="update-card reveal"><time datetime="2026-11-11">11. November 2026</time><h3>Musik-Visualizer</h3><p>Der Equalizer reagiert auf die Frequenzen des laufenden Titels.</p></li>
         <li class="update-card reveal"><time datetime="2026-10-30">30. Oktober 2026</time><h3>Strausberg-Karte &amp; Jahreszeiten</h3><p>Orte aus der Region, saisonale Effekte und ein Enten-Sammelspiel ergänzen die Seite.</p></li>
@@ -503,6 +525,7 @@
     <div class="egg-orbit egg-orbit-two" aria-hidden="true"></div>
   </section>
 </div>
+<div class="duck-game" id="duckGame" hidden aria-hidden="true"><div class="duck-game-backdrop" data-game-close></div><section class="duck-game-card" role="dialog" aria-modal="true" aria-labelledby="duckGameTitle"><button class="duck-game-close" type="button" data-game-close aria-label="Spiel schließen">×</button><p class="eyebrow">GEHEIMMODUS · ENTE</p><h2 id="duckGameTitle">Fang die Ente!</h2><p>Klicke die Ente so oft du kannst, bevor die Zeit abläuft.</p><p class="duck-game-status" id="duckGameStatus" aria-live="polite">10 Sekunden · 0 Treffer</p><button type="button" class="duck-game-target" id="duckGameTarget" aria-label="Ente fangen">🦆</button></section></div>
 
 <aside class="music-player" id="musicPlayer" aria-label="Hintergrundmusik">
   <div class="music-top">
@@ -537,7 +560,7 @@
 
 <script src="js/config.js?v=20261030-ecg1"></script>
 <script src="js/data.js?v=20261030-strausberg2"></script>
-<script type="module" src="js/audi-montage.js?v=20261111-legal1"></script>
-<script src="js/main.js?v=20261111-legal1" defer></script>
+<script type="module" src="js/audi-montage.js?v=20261111-features1"></script>
+<script src="js/main.js?v=20261111-features1" defer></script>
 </body>
 </html>
