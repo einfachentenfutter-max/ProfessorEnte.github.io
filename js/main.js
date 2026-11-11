@@ -43,7 +43,7 @@
   function initRipples() {
     var hero = $('#hero');
     var cv = $('#rippleCanvas');
-    if (!hero || !cv || reduce) return;
+    if (!hero || !cv) return;
     var ctx = cv.getContext('2d');
     var W = 0, H = 0, rings = [], raf = 0, visible = true, last = 0, lastX = -999, lastY = -999, dripT = 0;
 
@@ -55,6 +55,7 @@
       ctx.setTransform(d, 0, 0, d, 0, 0);
     }
     function add(x, y, s) {
+      if (reduce) return;
       rings.push({ x: x, y: y, r: 4, a: .38 * (s || 1), v: 80 + Math.random() * 40 });
       if (rings.length > 46) rings.shift();
       start();
@@ -82,11 +83,15 @@
       }
       raf = visible ? requestAnimationFrame(frame) : 0;
     }
-    function start() { if (!raf && visible) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+    function start() { if (!raf && visible && !reduce) { last = performance.now(); raf = requestAnimationFrame(frame); } }
 
     size();
     window.addEventListener('resize', size);
     new IntersectionObserver(function (e) { visible = e[0].isIntersecting; if (visible) start(); }).observe(hero);
+    window.addEventListener('pe:reducedmotion', function () {
+      if (reduce) { if (raf) cancelAnimationFrame(raf); raf = 0; rings = []; ctx.clearRect(0, 0, W, H); }
+      else start();
+    });
     hero.addEventListener('pointermove', function (e) {
       var b = cv.getBoundingClientRect();
       var x = e.clientX - b.left, y = e.clientY - b.top;
@@ -156,6 +161,8 @@
       requestAnimationFrame(function () { egg.classList.add('is-open'); });
       if (closeButton) closeButton.focus();
       count = 0;
+      try { localStorage.setItem('professorente-easter-egg', 'found'); } catch (_) {}
+      window.dispatchEvent(new Event('pe:easter'));
     }
     function close() {
       egg.classList.remove('is-open');
@@ -193,6 +200,8 @@
     var select = $('#musicTrack'), title = $('#musicTitle'), state = $('#musicState'), player = $('#musicPlayer');
     var previous = $('#musicPrevious'), next = $('#musicNext');
     var hero = $('#hero'), sceneVideo = $('#musicVideoBackdrop');
+    var visualizer = $('#musicVisualizer'), visualizerStatus = $('#musicVisualizerStatus');
+    var audioContext = null, analyser = null, mediaSource = null, visualizerFrame = 0, frequencyData = null;
     if (!audio || !button || !slider || !select || !title || !state || !player) return;
     var musicScenes = ['music-galaxy', 'music-golden', 'music-disco', 'music-ducklings', 'music-disco', 'music-devil', 'music-video'];
 
@@ -225,9 +234,60 @@
       var url = selectedUrl();
       if (audio.src !== url) { audio.src = url; audio.load(); }
     }
+    function prepareVisualizer() {
+      if (!visualizer) return false;
+      var AudioContextType = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextType) return false;
+      try {
+        if (!audioContext) {
+          audioContext = new AudioContextType();
+          analyser = audioContext.createAnalyser();
+          analyser.fftSize = 256;
+          analyser.smoothingTimeConstant = .78;
+          mediaSource = audioContext.createMediaElementSource(audio);
+          mediaSource.connect(analyser);
+          analyser.connect(audioContext.destination);
+          frequencyData = new Uint8Array(analyser.frequencyBinCount);
+          visualizer.hidden = false;
+        }
+        if (audioContext.state === 'suspended') audioContext.resume();
+        return true;
+      } catch (error) {
+        if (visualizerStatus) visualizerStatus.textContent = 'Der Visualizer ist in diesem Browser nicht verfügbar.';
+        return false;
+      }
+    }
+    function drawVisualizer() {
+      if (!analyser || !visualizer || audio.paused || document.hidden) return;
+      var context = visualizer.getContext('2d');
+      var width = visualizer.width, height = visualizer.height, bars = 28;
+      analyser.getByteFrequencyData(frequencyData);
+      context.clearRect(0, 0, width, height);
+      var slot = width / bars, barWidth = Math.max(2, slot * .62);
+      for (var i = 0; i < bars; i++) {
+        var start = Math.floor(i * frequencyData.length / bars);
+        var end = Math.max(start + 1, Math.floor((i + 1) * frequencyData.length / bars));
+        var total = 0;
+        for (var j = start; j < end; j++) total += frequencyData[j];
+        var level = total / (end - start) / 255;
+        var barHeight = Math.max(3, level * (height - 4));
+        var x = i * slot + (slot - barWidth) / 2, y = height - barHeight;
+        var gradient = context.createLinearGradient(0, height, 0, y);
+        gradient.addColorStop(0, '#F4B63A'); gradient.addColorStop(1, '#61D5C3');
+        context.fillStyle = gradient;
+        context.fillRect(x, y, barWidth, barHeight);
+      }
+      visualizerFrame = requestAnimationFrame(drawVisualizer);
+    }
+    function stopVisualizer() {
+      cancelAnimationFrame(visualizerFrame);
+      if (visualizer) { var context = visualizer.getContext('2d'); context.clearRect(0, 0, visualizer.width, visualizer.height); }
+      if (visualizerStatus) visualizerStatus.textContent = 'Visualizer pausiert.';
+    }
     function playSelected() {
       loadSelected();
       audio.volume = Number(slider.value) / 100;
+      prepareVisualizer();
       audio.play().catch(function () { state.textContent = 'Dieser Titel konnte nicht gestartet werden'; });
     }
     function moveTrack(direction, autoplay) {
@@ -254,15 +314,18 @@
     });
     if (next) next.addEventListener('click', function () { moveTrack(1, !audio.paused && !audio.ended); });
     slider.addEventListener('input', function () { audio.volume = Number(slider.value) / 100; });
-    audio.addEventListener('play', updateUI);
-    audio.addEventListener('pause', updateUI);
+    audio.addEventListener('play', function () {
+      updateUI();
+      if (analyser) { cancelAnimationFrame(visualizerFrame); if (visualizerStatus) visualizerStatus.textContent = 'Visualizer zeigt die Musikfrequenzen.'; drawVisualizer(); }
+    });
+    audio.addEventListener('pause', function () { stopVisualizer(); updateUI(); });
     audio.addEventListener('ended', function () {
       if (sceneVideo) { sceneVideo.pause(); try { sceneVideo.currentTime = 0; } catch (error) {} }
       moveTrack(1, true);
     });
     audio.addEventListener('error', function () { state.textContent = 'Datei konnte nicht geladen werden'; });
     select.addEventListener('change', updateUI);
-    document.addEventListener('visibilitychange', function () { if (document.hidden) audio.pause(); });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) audio.pause(); else if (!audio.paused && analyser) drawVisualizer(); });
     updateUI();
   }
 
@@ -307,7 +370,7 @@
       duck.addEventListener('animationend', function () { duck.remove(); }, { once: true });
     }
 
-    function setTheme(value) {
+    function setTheme(value, persist) {
       theme = value;
       document.body.dataset.theme = value;
       choices.forEach(function (button) {
@@ -319,8 +382,9 @@
         for (var i = 0; i < 7; i++) setTimeout(makeDuck, i * 180);
         timer = setInterval(makeDuck, 680);
       }
-      try { localStorage.setItem('professorente-theme', value); } catch (_) {}
+      if (persist) try { localStorage.setItem('professorente-theme', value); } catch (_) {}
     }
+    window.addEventListener('pe:reducedmotion', function () { setTheme(theme, false); });
 
     toggle.addEventListener('click', function () {
       var open = toggle.getAttribute('aria-expanded') !== 'true';
@@ -329,7 +393,7 @@
       if (open) choices[0].focus();
     });
     choices.forEach(function (button) {
-      button.addEventListener('click', function () { setTheme(button.dataset.themeChoice); });
+      button.addEventListener('click', function () { setTheme(button.dataset.themeChoice, true); });
     });
     document.addEventListener('click', function (event) {
       if (!panel.hidden && !event.target.closest('.theme-tools')) {
@@ -344,7 +408,41 @@
         toggle.focus();
       }
     });
-    setTheme(theme);
+    setTheme(theme, false);
+  }
+
+  function initAccessibility() {
+    var size = $('#textSize'), contrast = $('#contrastToggle'), motion = $('#motionToggle');
+    var settings = { size: 'normal', contrast: false, motion: null };
+    try {
+      var saved = JSON.parse(localStorage.getItem('professorente-accessibility') || '{}');
+      if (saved && typeof saved === 'object') settings = Object.assign(settings, saved);
+    } catch (_) {}
+    if (!['normal', 'large', 'xlarge'].includes(settings.size)) settings.size = 'normal';
+
+    function save(persist) {
+      var systemMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var motionActive = settings.motion === null ? systemMotion : Boolean(settings.motion || systemMotion);
+      document.documentElement.dataset.textSize = settings.size;
+      document.body.classList.toggle('high-contrast', Boolean(settings.contrast));
+      document.documentElement.classList.toggle('reduce-motion', motionActive);
+      reduce = motionActive;
+      if (size) size.value = settings.size;
+      if (contrast) { contrast.setAttribute('aria-pressed', settings.contrast ? 'true' : 'false'); $('span', contrast).textContent = settings.contrast ? 'An' : 'Aus'; }
+      if (motion) { motion.setAttribute('aria-pressed', motionActive ? 'true' : 'false'); $('span', motion).textContent = settings.motion === null ? 'System' : (motionActive ? 'An' : 'Aus'); }
+      if (persist) try { localStorage.setItem('professorente-accessibility', JSON.stringify(settings)); } catch (_) {}
+      window.dispatchEvent(new CustomEvent('pe:reducedmotion', { detail: reduce }));
+    }
+    if (size) size.addEventListener('change', function () { settings.size = size.value; save(true); });
+    if (contrast) contrast.addEventListener('click', function () { settings.contrast = !settings.contrast; save(true); });
+    if (motion) motion.addEventListener('click', function () {
+      var currentlyReduced = settings.motion === null ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : Boolean(settings.motion);
+      settings.motion = !currentlyReduced; save(true);
+    });
+    save(false);
+    var motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (motionPreference.addEventListener) motionPreference.addEventListener('change', function () { save(false); });
+    else if (motionPreference.addListener) motionPreference.addListener(function () { save(false); });
   }
 
   /* ───────────── Kleine Extras ───────────── */
@@ -418,21 +516,6 @@
       document.documentElement.classList.remove('has-site-loader');
       setTimeout(function () { loader.hidden = true; }, 650);
     }, reduce ? 100 : 720);
-  }
-
-  function initVisitorCounter() {
-    var count = $('#visitorCount');
-    if (!count || !window.fetch) return;
-    var key = 'professorente-einfachentenfutter-homepage', endpoint = 'https://countapi.mileshilliard.com/api/v1/';
-    var seenThisSession = false;
-    try { seenThisSession = sessionStorage.getItem('professorente-visit-counted') === 'yes'; } catch (_) {}
-    fetch(endpoint + (seenThisSession ? 'get/' : 'hit/') + key, { cache: 'no-store', mode: 'cors' })
-      .then(function (response) { if (!response.ok) throw new Error('Counter unavailable'); return response.json(); })
-      .then(function (data) {
-        count.textContent = Number(data.value).toLocaleString('de-DE');
-        if (!seenThisSession) try { sessionStorage.setItem('professorente-visit-counted', 'yes'); } catch (_) {}
-      })
-      .catch(function () { count.textContent = '—'; count.title = 'Besucherzähler gerade nicht erreichbar'; });
   }
 
   function initScrollTop() {
@@ -640,25 +723,21 @@
 
   function initProjectLeaderboard() {
     var list = $('#projectLeaderboard'), status = $('#leaderboardStatus');
-    if (!list || !D.projects || !window.fetch) return;
-    var endpoint = 'https://countapi.mileshilliard.com/api/v1/';
+    if (!list || !D.projects) return;
     var voteKey = 'professorente-project-vote';
+    var votesKey = 'professorente-project-votes-local';
     var votedProject = '';
-    try { votedProject = localStorage.getItem(voteKey) || ''; } catch (_) {}
+    var savedVotes = {};
+    try { votedProject = localStorage.getItem(voteKey) || ''; savedVotes = JSON.parse(localStorage.getItem(votesKey) || '{}') || {}; } catch (_) {}
+    if (votedProject && !savedVotes[votedProject]) savedVotes[votedProject] = 1;
     var entries = D.projects.map(function (project, index) {
       var slug = normalizedProjectName(project.slug || project.title).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      return { project: project, index: index, key: 'professorente-vote-' + slug, votes: 0 };
+      var key = 'professorente-vote-' + slug;
+      return { project: project, index: index, key: key, votes: Number(savedVotes[key]) || 0 };
     });
 
     function normalizedProjectName(name) {
       return String(name || '').toLocaleLowerCase('de').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    }
-    function getCount(entry) {
-      return fetch(endpoint + 'get/' + entry.key, { cache: 'no-store', mode: 'cors' }).then(function (response) {
-        if (response.status === 404) return { value: 0 };
-        if (!response.ok) throw new Error('Stimmen konnten nicht geladen werden');
-        return response.json();
-      }).then(function (data) { entry.votes = Number(data.value) || 0; });
     }
     function render() {
       entries.sort(function (a, b) { return b.votes - a.votes || a.index - b.index; });
@@ -679,39 +758,26 @@
         button.addEventListener('click', function () {
           if (votedProject) return;
           button.disabled = true;
-          if (status) status.textContent = 'Deine Stimme wird gespeichert …';
-          fetch(endpoint + 'hit/' + entry.key, { cache: 'no-store', mode: 'cors' }).then(function (response) {
-            if (!response.ok) throw new Error('Stimme konnte nicht gespeichert werden');
-            return response.json();
-          }).then(function (data) {
-            entry.votes = Number(data.value) || entry.votes + 1;
-            votedProject = entry.key;
-            try { localStorage.setItem(voteKey, votedProject); } catch (_) {}
-            if (status) status.textContent = 'Danke für deine Stimme! Du kannst pro Browser einmal abstimmen.';
-            render();
-          }).catch(function () {
-            button.disabled = false;
-            if (status) status.textContent = 'Abstimmen klappt gerade nicht. Versuch es später noch einmal.';
-          });
+          entry.votes++;
+          votedProject = entry.key;
+          savedVotes[entry.key] = entry.votes;
+          try { localStorage.setItem(voteKey, votedProject); localStorage.setItem(votesKey, JSON.stringify(savedVotes)); } catch (_) {}
+          if (status) status.textContent = 'Danke! Deine Stimme bleibt nur auf diesem Gerät gespeichert.';
+          render();
         });
         row.append(rank, copy, votes, button);
         list.appendChild(row);
       });
     }
 
-    Promise.all(entries.map(getCount)).then(function () {
-      render();
-      if (status) status.textContent = votedProject ? 'Danke fürs Mitmachen! Pro Browser ist eine Stimme möglich.' : 'Stimme für dein Lieblingsprojekt ab.';
-    }).catch(function () {
-      render();
-      if (status) status.textContent = 'Die Rangliste ist gerade nicht erreichbar. Du kannst es später erneut versuchen.';
-      $$('.leaderboard-vote', list).forEach(function (button) { button.disabled = true; });
-    });
+    render();
+    if (status) status.textContent = votedProject ? 'Deine lokale Stimme ist gespeichert.' : 'Wähle dein Lieblingsprojekt. Die Rangliste gilt nur in diesem Browser.';
   }
 
   function initStrausbergMap() {
-    var section = $('#karte'), mapElement = $('#strausbergMap'), status = $('#mapStatus'), placeList = $('#mapPlaces');
-    if (!section || !mapElement || !D.mapPoints || !D.mapPoints.length) return;
+    var mapElement = $('#strausbergMap'), status = $('#mapStatus'), placeList = $('#mapPlaces');
+    var consent = $('#mapConsent'), activate = $('#mapActivate'), deactivate = $('#mapDeactivate');
+    if (!mapElement || !D.mapPoints || !D.mapPoints.length) return;
     var mapStarted = false;
     var map = null, markers = Object.create(null);
 
@@ -728,6 +794,7 @@
       copy.append(name, type); button.append(symbol, copy);
       button.addEventListener('click', function () {
         if (map && markers[place.name]) { map.setView([place.lat, place.lon], 15, { animate: !reduce }); markers[place.name].openPopup(); }
+        else if (activate) { if (status) { status.hidden = false; status.textContent = 'Bitte bestätige zuerst „Karte jetzt laden“.'; } activate.focus(); }
         else window.open(osmLink(place), '_blank', 'noopener');
       });
       item.appendChild(button); placeList.appendChild(item);
@@ -736,15 +803,12 @@
     function showMap() {
       if (mapStarted) return;
       mapStarted = true;
+      if (status) { status.hidden = false; status.textContent = 'Karte wird geladen …'; }
       if (window.L) { buildMap(); return; }
-      var css = document.createElement('link');
-      css.rel = 'stylesheet'; css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-      document.head.appendChild(css);
       var script = document.createElement('script');
-      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-      script.crossOrigin = 'anonymous';
+      script.src = 'assets/vendor/leaflet/leaflet.js';
       script.onload = buildMap;
-      script.onerror = function () { mapStarted = false; if (status) status.textContent = 'Die Karte konnte nicht geladen werden. Die Ortsliste bleibt verfügbar.'; };
+      script.onerror = function () { mapStarted = false; if (status) status.textContent = 'Die Karte konnte nicht geladen werden. Die Ortsliste bleibt verfügbar.'; if (activate) activate.disabled = false; if (consent) consent.hidden = false; };
       document.head.appendChild(script);
     }
 
@@ -752,7 +816,7 @@
       if (!window.L || mapElement.dataset.ready === 'true') return;
       mapElement.dataset.ready = 'true';
       map = L.map(mapElement, { scrollWheelZoom: false, preferCanvas: true }).setView([52.567, 13.878], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap-Mitwirkende</a>'
       }).addTo(map);
@@ -763,15 +827,23 @@
         marker.bindPopup('<div class="map-popup"><span>' + esc(place.type) + '</span><strong>' + esc(place.name) + '</strong><p>' + esc(place.text) + '</p><a href="' + esc(place.url || osmLink(place)) + '" target="_blank" rel="noopener">Mehr dazu ↗</a></div>');
       });
       if (status) status.hidden = true;
+      if (consent) consent.hidden = true;
+      if (deactivate) deactivate.hidden = false;
       setTimeout(function () { map.invalidateSize(); }, 160);
     }
 
-    if ('IntersectionObserver' in window) {
-      var observer = new IntersectionObserver(function (items) {
-        if (items[0].isIntersecting) { showMap(); observer.disconnect(); }
-      }, { rootMargin: '240px' });
-      observer.observe(section);
-    } else showMap();
+    if (activate) activate.addEventListener('click', function () { activate.disabled = true; if (consent) consent.hidden = true; showMap(); });
+    if (deactivate) deactivate.addEventListener('click', function () {
+      if (map) { map.remove(); map = null; }
+      mapElement.replaceChildren();
+      mapElement.dataset.ready = 'false';
+      markers = Object.create(null);
+      mapStarted = false;
+      deactivate.hidden = true;
+      if (consent) consent.hidden = false;
+      if (activate) { activate.disabled = false; activate.focus(); }
+      if (status) status.hidden = true;
+    });
   }
 
   function initAtmosphere() {
@@ -838,6 +910,11 @@
       rainTimer = setInterval(drop, celebration === 'none' ? 1150 : 850);
     }
     update();
+    window.addEventListener('pe:reducedmotion', function () {
+      clearInterval(rainTimer);
+      if (reduce) { activeEffect = ''; if (layer) layer.replaceChildren(); }
+      else { activeEffect = ''; update(); }
+    });
     setInterval(update, 5 * 60 * 1000);
   }
 
@@ -864,9 +941,62 @@
         found.add(duck.dataset.duckId);
         try { localStorage.setItem('professorente-duck-hunt', JSON.stringify(Array.from(found))); } catch (_) {}
         update();
+        window.dispatchEvent(new Event('pe:ducks'));
       });
     });
     update();
+  }
+
+  function initAchievements() {
+    var list = $('#achievementList'), progress = $('#achievementProgress'), footerCount = $('#visitorCount');
+    if (!list) return;
+    var visited = new Set();
+    try {
+      var prior = JSON.parse(localStorage.getItem('professorente-visited-sections') || '[]');
+      if (Array.isArray(prior)) prior.forEach(function (id) { visited.add(String(id)); });
+    } catch (_) {}
+    var ducksFound = 0, eggFound = false;
+    function refresh() {
+      try {
+        var savedDucks = JSON.parse(localStorage.getItem('professorente-duck-hunt') || '[]');
+        ducksFound = Array.isArray(savedDucks) ? new Set(savedDucks.map(String)).size : 0;
+        eggFound = localStorage.getItem('professorente-easter-egg') === 'found';
+      } catch (_) {}
+      var unlocked = {
+        'duck-four': ducksFound >= 4,
+        'duck-all': ducksFound >= 8,
+        explorer: visited.size >= 6,
+        'easter-egg': eggFound
+      };
+      var count = 0;
+      Object.keys(unlocked).forEach(function (id) {
+        var item = $('[data-achievement="' + id + '"]', list);
+        if (!item) return;
+        item.setAttribute('aria-pressed', unlocked[id] ? 'true' : 'false');
+        var status = $('b', item);
+        if (status) status.textContent = unlocked[id] ? 'Freigeschaltet ✓' : 'Gesperrt';
+        if (unlocked[id]) count++;
+      });
+      if (progress) progress.textContent = count + ' von 4 Abzeichen freigeschaltet · ' + visited.size + ' Bereiche besucht';
+      if (footerCount) footerCount.textContent = count + ' / 4';
+    }
+    function markVisited(id) {
+      if (visited.has(id)) return;
+      visited.add(id);
+      try { localStorage.setItem('professorente-visited-sections', JSON.stringify(Array.from(visited))); } catch (_) {}
+      refresh();
+    }
+    window.addEventListener('pe:ducks', refresh);
+    window.addEventListener('pe:easter', refresh);
+    var sectionIds = ['ueber-mich', 'scripts', 'fivem-server', 'dead-yard', 'projekte', 'naechstes', 'ekg', 'privates', 'karte', 'entenjagd', 'aktuelles', 'kontakt'];
+    var sections = sectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) { if (entry.isIntersecting) { markVisited(entry.target.id); observer.unobserve(entry.target); } });
+      }, { threshold: .18 });
+      sections.forEach(function (section) { observer.observe(section); });
+    }
+    refresh();
   }
 
   var ICONS = {
@@ -1099,7 +1229,7 @@
       { name: 'Extrasystolen', rate: 'Musterbeispiel', kind: 'extra', color: '#D99CFF' }
     ];
     var width = 0, height = 0, ratio = 1, elapsed = 0, last = 0, modeIndex = 0;
-    var modeTime = 0, frameId = 0, playing = !reduce;
+    var modeTime = 0, frameId = 0, playing = !reduce, userPaused = false;
     var afIntervals = [.38, .76, .47, .59, .32, .83], afTotal = 0;
     afIntervals.forEach(function (v) { afTotal += v; });
 
@@ -1182,8 +1312,20 @@
     if (reduce) {
       playing = false; pause.disabled = true; pause.setAttribute('aria-label', 'Animation durch Bewegungseinstellung reduziert');
     } else start();
+    window.addEventListener('pe:reducedmotion', function (event) {
+      if (event.detail) {
+        playing = false; stop(); pause.disabled = true; pause.setAttribute('aria-label', 'Animation durch Bewegungseinstellung reduziert');
+      } else {
+        pause.disabled = false; playing = !userPaused;
+        pause.setAttribute('aria-label', playing ? 'EKG-Simulation pausieren' : 'EKG-Simulation fortsetzen');
+        if (playing) start();
+      }
+      pause.textContent = playing ? 'Ⅱ' : '▶';
+      pause.setAttribute('aria-pressed', playing ? 'false' : 'true');
+    });
     pause.addEventListener('click', function () {
       playing = !playing;
+      userPaused = !playing;
       pause.textContent = playing ? 'Ⅱ' : '▶';
       pause.setAttribute('aria-pressed', playing ? 'false' : 'true');
       pause.setAttribute('aria-label', playing ? 'EKG-Simulation pausieren' : 'EKG-Simulation fortsetzen');
@@ -1207,12 +1349,13 @@
   function boot() {
     initPageLoader();
     initTitle();
+    initAccessibility();
     initThemeStudio();
     initSoundEffects();
     initDuckInteraction();
     initAtmosphere();
     initDuckHunt();
-    initVisitorCounter();
+    initAchievements();
     initScrollTop();
     initStrausbergMap();
     initRipples();

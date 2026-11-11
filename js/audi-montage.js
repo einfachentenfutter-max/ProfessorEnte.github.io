@@ -16,6 +16,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
     var state = document.getElementById('audiBuildState');
     var loadingCopy = document.getElementById('audiLoadingCopy');
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    try { var accessibility = JSON.parse(localStorage.getItem('professorente-accessibility') || '{}'); reduce = reduce || Boolean(accessibility.motion); } catch (error) {}
     if (reduce && replay) replay.hidden = true;
 
     var renderer, scene, camera, vehicleRoot = null, parts = [];
@@ -229,6 +230,19 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
       }
     }
     function stop() { if (frameId) cancelAnimationFrame(frameId); frameId = 0; }
+
+    window.addEventListener('pe:reducedmotion', function (event) {
+      reduce = Boolean(event.detail);
+      if (reduce) {
+        if (loaded) finishParts();
+        stop();
+        if (replay) replay.hidden = true;
+      } else {
+        if (replay) replay.hidden = false;
+        if (!requestStarted && visible) loadVehicle();
+        else start();
+      }
+    });
 
     if (replay) replay.addEventListener('click', function () { if (loaded) rebuild(); else loadVehicle(); });
     canvas.addEventListener('pointerdown', function (event) {
